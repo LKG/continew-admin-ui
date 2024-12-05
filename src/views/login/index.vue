@@ -27,13 +27,22 @@
           <div class="login-right__oauth">
             <a-divider orientation="center">其他登录方式</a-divider>
             <div class="list">
-              <div v-if="isEmailLogin" class="mode item" @click="toggleLoginMode"><icon-user /> 账号/手机号登录</div>
-              <div v-else class="mode item" @click="toggleLoginMode"><icon-email /> 邮箱登录</div>
-              <a class="item" title="使用 Gitee 账号登录" @click="onOauth('gitee')">
-                <GiSvgIcon name="gitee" :size="24" />
+              <div v-if="isEmailLogin" class="mode item" @click="toggleLoginMode"><icon-user />账号/手机号登录</div>
+              <div v-else class="mode item" @click="toggleLoginMode"><icon-email />邮箱</div>
+              <a class="item" title="使用 QQ 账号登录" @click="onOauth('qq')">
+                <icon-qq :size="24" />
+              </a>
+              <a class="item" title="使用 微博 账号登录" @click="onOauth('weibo')">
+                <icon-weibo :size="24" />
+              </a>
+              <a class="item" title="使用抖音账号登录" @click="onOauth('douyin')">
+                <icon-tiktok-color :size="24" />
+              </a>
+              <a class="item" title="使用微信账号登录" @click="onOauth('wechat')">
+                <icon-wechat :size="24" />
               </a>
               <a class="item" title="使用 GitHub 账号登录" @click="onOauth('github')">
-                <GiSvgIcon name="github" :size="24" />
+                <icon-github :size="24" />
               </a>
             </div>
           </div>
