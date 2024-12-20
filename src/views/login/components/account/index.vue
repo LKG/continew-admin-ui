@@ -72,11 +72,11 @@ const rules: FormInstance['rules'] = {
 
 // 验证码过期定时器
 let timer
-const startTimer = (expireTime: number) => {
+const startTimer = (expireTime: number, curTime = Date.now()) => {
   if (timer) {
     clearTimeout(timer)
   }
-  const remainingTime = expireTime - Date.now()
+  const remainingTime = expireTime - curTime
   if (remainingTime <= 0) {
     form.expired = true
     return
@@ -100,7 +100,7 @@ const getCaptcha = () => {
     captchaImgBase64.value = img
     form.uuid = uuid
     form.expired = false
-    startTimer(expireTime)
+    startTimer(expireTime, Number(res.timestamp))
   })
 }
 

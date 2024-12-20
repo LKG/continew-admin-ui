@@ -29,8 +29,7 @@
           </a-tooltip>
           <template #content>
             <a-doption v-for="item in sizeList" :key="item.value" :value="item.value" :active="item.value === size">
-              {{
-                item.label }}
+              {{ item.label }}
             </a-doption>
           </template>
         </a-dropdown>
@@ -72,6 +71,9 @@
           </a-button>
         </a-tooltip>
       </a-space>
+    </a-row>
+    <a-row class="gi-table__toolbar-bottom">
+      <slot name="toolbar-bottom"></slot>
     </a-row>
     <div class="gi-table__body" :class="`gi-table__body-pagination-${attrs['page-position']}`">
       <div class="gi-table__container">
@@ -125,6 +127,11 @@ defineSlots<{
   'expand-row': (props: { record: T }) => void
   'expand-icon': (props: { record: T, expanded?: boolean }) => void
   'columns': () => void
+  'custom-title': () => void
+  'top': () => void
+  'toolbar-left': () => void
+  'toolbar-right': () => void
+  'toolbar-bottom': () => void
   [propsName: string]: (props: { key: string, record: T, column: TableColumnData, rowIndex: number }) => void
 }>()
 
@@ -360,6 +367,10 @@ defineExpose({ tableRef })
 
     :deep(.arco-form-layout-inline .arco-form-item) {
       margin-bottom: 0;
+    }
+
+    &-bottom {
+      margin-bottom: 8px;
     }
   }
 

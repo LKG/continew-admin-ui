@@ -205,7 +205,7 @@ onMounted(() => {
   .search {
     display: flex;
     justify-content: start;
-    margin-bottom: 2px;
+    margin-bottom: 10px;
     .arco-btn {
       margin-left: 8px;
       padding: 0 15px;
