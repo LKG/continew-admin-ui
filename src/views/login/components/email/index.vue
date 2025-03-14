@@ -23,6 +23,11 @@
         {{ captchaBtnName }}
       </a-button>
     </a-form-item>
+    <!-- <a-form-item>
+      <a-space direction="vertical" fill class="w-full">
+        <a-button disabled class="btn" type="primary" :loading="loading" size="large" long>查看邮件验证</a-button>
+      </a-space>
+    </a-form-item> -->
     <a-form-item>
       <a-space direction="vertical" fill class="w-full">
         <a-button disabled class="btn" type="primary" :loading="loading" html-type="submit" size="large" long>立即登录</a-button>
