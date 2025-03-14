@@ -14,8 +14,8 @@
       </a-col>
       <a-col :xs="24" :sm="12" :md="11">
         <div class="login-switcher">
-          <img v-if="pc" src="@/assets/images/switcher-pc.png" alt="pc" />
-          <img v-else src="@/assets/images/switcher-qr.png" alt="qr" />
+          <img v-if="isQr" src="@/assets/images/switcher-pc.png" alt="pc" @click="toggleLoginMode" />
+          <img v-else src="@/assets/images/switcher-qr.png" alt="qr" @click="toggleLoginMode" />
         </div>
         <div class="login-right">
           <a-tabs v-model:activeKey="activeTab" class="login-right__form">
@@ -74,6 +74,10 @@
     </div>
     <a-row align="stretch" class="login-box">
       <a-col :xs="24" :sm="12" :md="11">
+        <div class="login-switcher">
+          <img v-if="isQr" src="@/assets/images/switcher-pc.png" alt="pc" @click="toggleLoginMode" />
+          <img v-else src="@/assets/images/switcher-qr.png" alt="qr" @click="toggleLoginMode" />
+        </div>
         <div class="login-right">
           <a-tabs v-model:activeKey="activeTab" class="login-right__form">
             <a-tab-pane key="1" title="账号登录">
@@ -127,12 +131,17 @@ import { useDevice } from '@/hooks'
 
 defineOptions({ name: 'Login' })
 
-const { isDesktop } = useDevice()
+const { isDesktop } = useDevice(false)
 const appStore = useAppStore()
 const title = computed(() => appStore.getTitle())
 const logo = computed(() => appStore.getLogo())
 
 const activeTab = ref('1')
+
+const isQr = ref(false)
+const toggleLoginMode = () => {
+  isQr.value = !isQr.value
+}
 
 // 第三方登录授权
 const onOauth = async (source: string) => {
@@ -151,6 +160,9 @@ const onOauth = async (source: string) => {
       display: flex;
       justify-content: flex-end;
       width: 100%;
+      img{
+        cursor: pointer;
+      }
   }
   .login {
     height: 100%;
@@ -185,15 +197,16 @@ const onOauth = async (source: string) => {
       width: 100%;
       display: flex;
       z-index: 999;
+      box-shadow: 0 -2px 4px 2px rgba(0, 0, 0, 0.08);
     }
   }
 
   .login-right {
     width: 100%;
-    height: 100%;
+    // height: 100%;
     display: flex;
     flex-direction: column;
-    padding: 30px 30px 0;
+    padding: 30px  30px 0;
     box-sizing: border-box;
 
     &__title {
@@ -341,6 +354,9 @@ const onOauth = async (source: string) => {
       display: flex;
       justify-content: flex-end;
       width: 100%;
+      img{
+        cursor: pointer;
+      }
   }
   .login {
     height: 100%;
@@ -406,11 +422,11 @@ const onOauth = async (source: string) => {
 
   .login-right {
     width: 100%;
-    height: 100%;
+    // height: 100%;
     background: var(--color-bg-1);
     display: flex;
     flex-direction: column;
-    padding: 30px 30px 0;
+    padding: 0 30px 0 30px;
     box-sizing: border-box;
 
     &__title {
