@@ -55,6 +55,7 @@
             <a-space>
               <a-link v-permission="['system:user:detail']" title="详情" @click="onDetail(record)">详情</a-link>
               <a-link v-permission="['system:user:update']" title="修改" @click="onUpdate(record)">修改</a-link>
+              <a-link v-permission="['system:user:resetPwd']" title="重置密码" @click="onResetPwd(record)">重置密码</a-link>
               <a-link
                 v-permission="['system:user:delete']"
                 status="danger"
@@ -71,7 +72,6 @@
                   </template>
                 </a-button>
                 <template #content>
-                  <a-doption v-permission="['system:user:resetPwd']" title="重置密码" @click="onResetPwd(record)">重置密码</a-doption>
                   <a-doption v-permission="['system:user:updateRole']" title="分配角色" @click="onUpdateRole(record)">分配角色</a-doption>
                 </template>
               </a-dropdown>
@@ -154,7 +154,7 @@ const {
 const columns: TableInstanceColumns[] = [
   {
     title: '序号',
-    width: 66,
+    width: 60,
     align: 'center',
     render: ({ rowIndex }) => h('span', {}, rowIndex + 1 + (pagination.current - 1) * pagination.pageSize),
     fixed: !isMobile() ? 'left' : undefined,
@@ -168,16 +168,16 @@ const columns: TableInstanceColumns[] = [
     tooltip: true,
     fixed: !isMobile() ? 'left' : undefined,
   },
-  { title: '用户名', dataIndex: 'username', slotName: 'username', minWidth: 140, ellipsis: true, tooltip: true },
-  { title: '状态', dataIndex: 'status', slotName: 'status', align: 'center' },
-  { title: '性别', dataIndex: 'gender', slotName: 'gender', align: 'center' },
+  { title: '用户名', dataIndex: 'username', slotName: 'username', minWidth: 120, ellipsis: true, tooltip: true },
+  { title: '状态', width: 80, dataIndex: 'status', slotName: 'status', align: 'center' },
+  { title: '性别', width: 60, dataIndex: 'gender', slotName: 'gender', align: 'center' },
   { title: '所属部门', dataIndex: 'deptName', minWidth: 180, ellipsis: true, tooltip: true },
   { title: '角色', dataIndex: 'roleNames', slotName: 'roleNames', minWidth: 165 },
-  { title: '手机号', dataIndex: 'phone', minWidth: 170, ellipsis: true, tooltip: true },
-  { title: '邮箱', dataIndex: 'email', minWidth: 170, ellipsis: true, tooltip: true },
+  { title: '手机号', dataIndex: 'phone', minWidth: 120, ellipsis: true, tooltip: true },
+  { title: '邮箱', dataIndex: 'email', minWidth: 150, ellipsis: true, tooltip: true },
   { title: '系统内置', dataIndex: 'isSystem', slotName: 'isSystem', width: 100, align: 'center', show: false },
   { title: '描述', dataIndex: 'description', minWidth: 130, ellipsis: true, tooltip: true },
-  { title: '创建人', dataIndex: 'createUserString', width: 140, ellipsis: true, tooltip: true, show: false },
+  { title: '创建人', dataIndex: 'createUserString', width: 120, ellipsis: true, tooltip: true, show: false },
   { title: '创建时间', dataIndex: 'createTime', width: 180 },
   { title: '修改人', dataIndex: 'updateUserString', width: 140, ellipsis: true, tooltip: true, show: false },
   { title: '修改时间', dataIndex: 'updateTime', width: 180, show: false },
@@ -185,7 +185,7 @@ const columns: TableInstanceColumns[] = [
     title: '操作',
     dataIndex: 'action',
     slotName: 'action',
-    width: 190,
+    width: 300,
     align: 'center',
     fixed: !isMobile() ? 'right' : undefined,
     show: has.hasPermOr([
