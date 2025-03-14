@@ -13,6 +13,10 @@
         </div>
       </a-col>
       <a-col :xs="24" :sm="12" :md="11">
+        <div class="login-switcher">
+          <img v-if="pc" src="@/assets/images/switcher-pc.png" alt="pc" />
+          <img v-else src="@/assets/images/switcher-qr.png" alt="qr" />
+        </div>
         <div class="login-right">
           <a-tabs v-model:activeKey="activeTab" class="login-right__form">
             <a-tab-pane key="1" title="账号登录">
@@ -39,6 +43,9 @@
               </a>
               <a class="item" title="使用微信账号登录" @click="onOauth('wechat')">
                 <icon-wechat :size="24" />
+              </a>
+              <a class="item" title="使用 飞书 账号登录" @click="onOauth('lark')">
+                <icon-lark-color :size="24" />
               </a>
               <a class="item" title="使用 GitHub 账号登录" @click="onOauth('github')">
                 <icon-github :size="24" />
@@ -97,6 +104,9 @@
         <a class="item" title="使用微信账号登录" @click="onOauth('wechat')">
           <icon-wechat :size="24" />
         </a>
+        <a class="item" title="使用 飞书 账号登录" @click="onOauth('lark')">
+          <icon-lark-color :size="24" />
+        </a>
         <a class="item" title="使用 GitHub 账号登录" @click="onOauth('github')">
           <icon-github :size="24" />
         </a>
@@ -122,13 +132,7 @@ const appStore = useAppStore()
 const title = computed(() => appStore.getTitle())
 const logo = computed(() => appStore.getLogo())
 
-const isEmailLogin = ref(false)
 const activeTab = ref('1')
-
-// 切换登录模式
-const toggleLoginMode = () => {
-  isEmailLogin.value = !isEmailLogin.value
-}
 
 // 第三方登录授权
 const onOauth = async (source: string) => {
@@ -143,7 +147,11 @@ const onOauth = async (source: string) => {
     display: none !important;
     background-color: white !important;
   }
-
+  .login-switcher{
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+  }
   .login {
     height: 100%;
     display: flex;
@@ -152,7 +160,6 @@ const onOauth = async (source: string) => {
     align-items: center;
     background-color: var(--color-bg-5);
     color: #121314;
-
     &-logo {
       width: 100%;
       height: 104px;
@@ -330,7 +337,11 @@ const onOauth = async (source: string) => {
   .h5 {
     display: none !important;
   }
-
+  .login-switcher{
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+  }
   .login {
     height: 100%;
     display: flex;
