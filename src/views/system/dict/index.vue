@@ -13,7 +13,7 @@
               :columns="columns"
               :loading="loading"
               :scroll="{ x: '100%', y: '100%', minWidth: 600 }"
-              :pagination="pagination"
+              :pagination="false"
               :disabled-tools="['size']"
               :disabled-column-keys="['label']"
               @refresh="search"
@@ -26,7 +26,7 @@
                 </a-button>
               </template>
               <template #toolbar-right>
-                <a-button v-permission="['system:dict:item:add']" type="primary" @click="onAdd">
+                <a-button v-permission="['system:dict:item:add']" type="primary" @click="onAdd('0')">
                   <template #icon><icon-plus /></template>
                   <template #default>新增</template>
                 </a-button>
@@ -52,6 +52,7 @@
                   >
                     删除
                   </a-link>
+                  <a-link v-permission="['system:dict:item:add']" title="新增" @click="onAdd(record.id)">新增</a-link>
                 </a-space>
               </template>
             </GiTable>
@@ -68,7 +69,7 @@
 import { Message, Modal } from '@arco-design/web-vue'
 import DictTree from './tree/index.vue'
 import DictItemAddModal from './DictItemAddModal.vue'
-import { type DictItemQuery, type DictItemResp, clearDictCache, deleteDictItem, listDictItem } from '@/apis/system/dict'
+import { type DictItemQuery, type DictItemResp, clearDictCache, deleteDictItem, listDictItemTree } from '@/apis/system/dict'
 import type { TableInstanceColumns } from '@/components/GiTable/type'
 import { useTable } from '@/hooks'
 import { isMobile } from '@/utils'
@@ -87,7 +88,7 @@ const {
   pagination,
   search,
   handleDelete,
-} = useTable((page) => listDictItem({ ...queryForm, ...page }), { immediate: false })
+} = useTable((page) => listDictItemTree({ ...queryForm, ...page }), { immediate: false })
 const columns: TableInstanceColumns[] = [
   {
     title: '序号',
@@ -115,7 +116,7 @@ const columns: TableInstanceColumns[] = [
     title: '操作',
     dataIndex: 'action',
     slotName: 'action',
-    width: 130,
+    width: 180,
     align: 'center',
     fixed: !isMobile() ? 'right' : undefined,
     show: has.hasPermOr(['system:dict:item:update', 'system:dict:item:delete']),
@@ -166,7 +167,7 @@ const handleSelectDict = (dict: { dictId: string, dictName: string, dictCode: st
 
 const DictItemAddModalRef = ref<InstanceType<typeof DictItemAddModal>>()
 // 新增
-const onAdd = () => {
+const onAdd = (parentId?: string) => {
   DictItemAddModalRef.value?.onAdd(queryForm.dictId)
 }
 

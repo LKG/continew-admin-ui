@@ -39,7 +39,10 @@ export function clearDictCache(code: string) {
 export function listDictItem(query: T.DictItemPageQuery) {
   return http.get<PageRes<T.DictItemResp[]>>(`${BASE_URL}/item`, query)
 }
-
+/** @desc 查询字典项Tree */
+export function listDictItemTree(query: T.DictItemPageQuery) {
+  return http.get<PageRes<T.DictItemResp[]>>(`${BASE_URL}/item/tree`, query)
+}
 /** @desc 查询字典项详情 */
 export function getDictItem(id: string) {
   return http.get<T.DictItemResp>(`${BASE_URL}/item/${id}`)

@@ -164,6 +164,9 @@ export interface DictItemResp {
   createTime: string
   updateUserString: string
   updateTime: string
+  itemLevel: number
+  parentId: string
+  children: DictItemResp[]
 }
 export interface DictItemQuery {
   description?: string
