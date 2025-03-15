@@ -58,6 +58,12 @@
             />
           </div>
           <a-space direction="vertical" style="width: 100%;">
+            <a-countdown
+              style="display: flex;justify-content: center;color: #000;"
+              :value="Date.now() + 1000 * 60 * 3"
+              :now="Date.now()"
+              @finish="handleFinish"
+            />
             <a-link :hoverable="false" style="width: 100%;display: flex;color: #000;" @click="loadQrCode">
               <template #icon>
                 <icon-refresh />
@@ -204,6 +210,9 @@ const qrStatus = ref<'active' | 'expired' | 'loading' | 'scanned'>('loading')
 // 模拟设置二维码状态的方法
 const setQrStatus = (status: 'active' | 'expired' | 'loading' | 'scanned') => {
   qrStatus.value = status
+}
+const handleFinish = () => {
+  setQrStatus('expired')
 }
 const loadQrCode = () => {
   qrStatus.value = 'loading'
