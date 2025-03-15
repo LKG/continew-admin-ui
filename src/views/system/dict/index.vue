@@ -61,7 +61,7 @@
       </template>
     </SplitPanel>
 
-    <DictItemAddModal ref="DictItemAddModalRef" @save-success="search" />
+    <DictItemAddModal ref="DictItemAddModalRef" :items="dataList" @save-success="search" />
   </div>
 </template>
 
