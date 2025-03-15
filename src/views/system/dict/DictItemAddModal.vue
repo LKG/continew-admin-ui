@@ -207,11 +207,11 @@ const save = async () => {
 }
 
 // 新增
-const onAdd = (id: string) => {
+const onAdd = (dId: string, id: string) => {
   reset()
   form.parentId = id
   dataId.value = ''
-  dictId.value = id
+  dictId.value = dId
   visible.value = true
 }
 

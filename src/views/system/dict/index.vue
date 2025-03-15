@@ -52,7 +52,7 @@
                   >
                     删除
                   </a-link>
-                  <a-link v-permission="['system:dict:item:add']" title="新增" @click="onAdd(record.id)">新增</a-link>
+                  <a-link v-permission="['system:dict:item:add']" title="新增" @click="onAdd(record)">新增</a-link>
                 </a-space>
               </template>
             </GiTable>
@@ -167,8 +167,8 @@ const handleSelectDict = (dict: { dictId: string, dictName: string, dictCode: st
 
 const DictItemAddModalRef = ref<InstanceType<typeof DictItemAddModal>>()
 // 新增
-const onAdd = (parentId?: string) => {
-  DictItemAddModalRef.value?.onAdd(queryForm.dictId)
+const onAdd = (record: DictItemResp) => {
+  DictItemAddModalRef.value?.onAdd(queryForm.dictId, record.id)
 }
 
 // 修改
