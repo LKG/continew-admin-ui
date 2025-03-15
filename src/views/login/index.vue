@@ -41,7 +41,7 @@
               text="https://www.gongwk.com/"
               style="box-shadow: 0 0 8px #DDD;"
               :correct-level="3"
-              logo-src="/logo.svg"
+              logo-src="/logo.png"
               :logo-scale="40"
               :size="196"
               :margin="5"
@@ -50,7 +50,7 @@
               v-if="qrStatus === 'active'"
               style="box-shadow: 0 0 8px #DDD;"
               text="https://www.gongwk.com/"
-              logo-src="/logo.svg"
+              logo-src="/logo.png"
               :correct-level="3"
               :logo-scale="40"
               :size="196"
@@ -60,7 +60,7 @@
           <a-space direction="vertical" style="width: 100%;">
             <a-countdown
               style="display: flex;justify-content: center;color: #000;"
-              :value="Date.now() + 1000 * 60 * 3"
+              :value="Date.now() + 1000 * 60 * 5"
               :now="Date.now()"
               @finish="handleFinish"
             />
