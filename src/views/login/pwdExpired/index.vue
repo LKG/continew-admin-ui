@@ -70,7 +70,7 @@ import { useDevice } from '@/hooks'
 
 defineOptions({ name: 'PwdExpired' })
 
-const { isDesktop } = useDevice()
+const { isDesktop } = useDevice(true)
 const appStore = useAppStore()
 const title = computed(() => appStore.getTitle())
 const logo = computed(() => appStore.getLogo())

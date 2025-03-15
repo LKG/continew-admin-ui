@@ -17,7 +17,56 @@
           <img v-if="isQr" src="@/assets/images/switcher-pc.png" alt="pc" @click="toggleLoginMode" />
           <img v-else src="@/assets/images/switcher-qr.png" alt="qr" @click="toggleLoginMode" />
         </div>
-        <div class="login-right">
+        <div v-if="isQr" class="login-right">
+          <div>
+            <h2>微信扫码 安全登录</h2>
+          </div>
+          <div class="qr-container">
+            <div v-if="qrStatus === 'loading'" class="qrcode-mask">
+              <a-button type="text" loading long>Loading...</a-button>
+            </div>
+            <div v-else-if="qrStatus === 'expired'" class="qrcode-mask">
+              <a-alert type="error" style="background-color:transparent;width:auto;">二维码过期</a-alert>
+              <a-link :hoverable="false" style="width: 100%;display: flex;" @click="loadQrCode">
+                <template #icon>
+                  <icon-refresh />
+                </template>刷新二维码
+              </a-link>
+            </div>
+            <div v-else-if="qrStatus === 'scanned'" class="qrcode-mask">
+              <a-alert type="success" style="background-color:transparent;width:auto;">已扫描</a-alert>
+            </div>
+            <vue-qr
+              v-if="qrStatus !== 'active'"
+              text="https://www.gongwk.com/"
+              style="box-shadow: 0 0 8px #DDD;"
+              :correct-level="3"
+              logo-src="/logo.svg"
+              :logo-scale="40"
+              :size="196"
+              :margin="5"
+            />
+            <vue-qr
+              v-if="qrStatus === 'active'"
+              style="box-shadow: 0 0 8px #DDD;"
+              text="https://www.gongwk.com/"
+              logo-src="/logo.svg"
+              :correct-level="3"
+              :logo-scale="40"
+              :size="196"
+              :margin="5"
+            />
+          </div>
+          <a-space direction="vertical" style="width: 100%;">
+            <a-link :hoverable="false" style="width: 100%;display: flex;color: #000;" @click="loadQrCode">
+              <template #icon>
+                <icon-refresh />
+              </template>刷新二维码
+            </a-link>
+            <a-link :hoverable="false" style="width: 100%;display: flex;color: #000;">微信扫码关注登录注册</a-link>
+          </a-space>
+        </div>
+        <div v-else class="login-right">
           <a-tabs v-model:activeKey="activeTab" class="login-right__form">
             <a-tab-pane key="1" title="账号登录">
               <component :is="AccountLogin" v-if="activeTab === '1'" />
@@ -121,6 +170,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import vueQr from 'vue-qr/src/packages/vue-qr.vue'
 import Background from './components/background/index.vue'
 import AccountLogin from './components/account/index.vue'
 import PhoneLogin from './components/phone/index.vue'
@@ -130,8 +180,9 @@ import { useAppStore } from '@/stores'
 import { useDevice } from '@/hooks'
 
 defineOptions({ name: 'Login' })
+// status 的值控制二维码的状态，提供了 active、expired、loading、scanned
 
-const { isDesktop } = useDevice(false)
+const { isDesktop } = useDevice(true)
 const appStore = useAppStore()
 const title = computed(() => appStore.getTitle())
 const logo = computed(() => appStore.getLogo())
@@ -148,21 +199,64 @@ const onOauth = async (source: string) => {
   const { data } = await socialAuth(source)
   window.location.href = data.authorizeUrl
 }
+// 定义二维码状态
+const qrStatus = ref<'active' | 'expired' | 'loading' | 'scanned'>('loading')
+// 模拟设置二维码状态的方法
+const setQrStatus = (status: 'active' | 'expired' | 'loading' | 'scanned') => {
+  qrStatus.value = status
+}
+const loadQrCode = () => {
+  qrStatus.value = 'loading'
+  // 模拟加载过程
+  setTimeout(() => {
+    setQrStatus('active')
+  }, 1000)
+}
 </script>
 
 <style scoped lang="scss">
+.qr-container {
+  padding-top: 30px;
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  // overflow: hidden;
+  width: 100%;
+  height: 100%;
+  margin-bottom: 10px;
+  .qrcode-mask{
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background:rgba(255, 255, 255, 0.96);
+    text-align: center;
+    .qrcode-expired, .qrcode-scanned {
+      color: rgba(0, 0, 0, 0.88);
+    }
+  }
+}
+
 @media screen and (max-width: 570px) {
   .pc {
     display: none !important;
     background-color: white !important;
   }
   .login-switcher{
-      display: flex;
-      justify-content: flex-end;
-      width: 100%;
-      img{
-        cursor: pointer;
-      }
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  img{
+    cursor: pointer;
+  }
   }
   .login {
     height: 100%;
@@ -173,31 +267,31 @@ const onOauth = async (source: string) => {
     background-color: var(--color-bg-5);
     color: #121314;
     &-logo {
-      width: 100%;
-      height: 104px;
-      font-weight: 700;
-      font-size: 20px;
-      line-height: 32px;
-      display: flex;
-      padding: 0 20px;
-      align-items: center;
-      justify-content: start;
-      background-image: url('/src/assets/images/login_h5.jpg');
-      background-size: 100% 100%;
-      box-sizing: border-box;
+  width: 100%;
+  height: 104px;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 32px;
+  display: flex;
+  padding: 0 20px;
+  align-items: center;
+  justify-content: start;
+  background-image: url('/src/assets/images/login_h5.jpg');
+  background-size: 100% 100%;
+  box-sizing: border-box;
 
-      img {
-        width: 34px;
-        height: 34px;
-        margin-right: 8px;
-      }
+  img {
+    width: 34px;
+    height: 34px;
+    margin-right: 8px;
+  }
     }
 
     &-box {
-      width: 100%;
-      display: flex;
-      z-index: 999;
-      box-shadow: 0 -2px 4px 2px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  display: flex;
+  z-index: 999;
+  box-shadow: 0 -2px 4px 2px rgba(0, 0, 0, 0.08);
     }
   }
 
@@ -210,108 +304,108 @@ const onOauth = async (source: string) => {
     box-sizing: border-box;
 
     &__title {
-      color: var(--color-text-1);
-      font-weight: 500;
-      font-size: 20px;
-      line-height: 32px;
-      margin-bottom: 20px;
+  color: var(--color-text-1);
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 32px;
+  margin-bottom: 20px;
     }
 
     &__form {
-      :deep(.arco-tabs-nav-tab) {
-        display: flex;
-        justify-content: start;
-        align-items: center;
-      }
+  :deep(.arco-tabs-nav-tab) {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+  }
 
-      :deep(.arco-tabs-tab) {
-        color: var(--color-text-2);
-        margin: 0 20px 0 0;
-      }
+  :deep(.arco-tabs-tab) {
+    color: var(--color-text-2);
+    margin: 0 20px 0 0;
+  }
 
-      :deep(.arco-tabs-tab-title) {
-        font-size: 16px;
-        font-weight: 500;
-        line-height: 22px;
-      }
+  :deep(.arco-tabs-tab-title) {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 22px;
+  }
 
-      :deep(.arco-tabs-content) {
-        margin-top: 10px;
-      }
+  :deep(.arco-tabs-content) {
+    margin-top: 10px;
+  }
 
-      :deep(.arco-tabs-tab-active),
-      :deep(.arco-tabs-tab-title:hover) {
-        color: rgb(var(--arcoblue-6));
-      }
+  :deep(.arco-tabs-tab-active),
+  :deep(.arco-tabs-tab-title:hover) {
+    color: rgb(var(--arcoblue-6));
+  }
 
-      :deep(.arco-tabs-nav::before) {
-        display: none;
-      }
+  :deep(.arco-tabs-nav::before) {
+    display: none;
+  }
 
-      :deep(.arco-tabs-tab-title:before) {
-        display: none;
-      }
+  :deep(.arco-tabs-tab-title:before) {
+    display: none;
+  }
     }
 
     &__oauth {
-      width: 100%;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      padding-bottom: 20px;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding-bottom: 20px;
 
-      // margin-top: auto;
-      // margin-bottom: 20px;
-      :deep(.arco-divider-text) {
-        color: var(--color-text-4);
-        font-size: 12px;
-        font-weight: 400;
-        line-height: 20px;
+  // margin-top: auto;
+  // margin-bottom: 20px;
+  :deep(.arco-divider-text) {
+    color: var(--color-text-4);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 20px;
+  }
+
+  .list {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    .item {
+      margin-right: 15px;
+    }
+
+    .mode {
+      color: var(--color-text-2);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 20px;
+      padding: 6px 10px;
+      align-items: center;
+      border: 1px solid var(--color-border-3);
+      border-radius: 32px;
+      box-sizing: border-box;
+      display: flex;
+      height: 32px;
+      justify-content: center;
+      cursor: pointer;
+
+      .icon {
+    width: 21px;
+    height: 20px;
       }
+    }
 
-      .list {
-        align-items: center;
-        display: flex;
-        justify-content: center;
-        width: 100%;
+    .mode svg {
+      font-size: 16px;
+      margin-right: 10px;
+    }
 
-        .item {
-          margin-right: 15px;
-        }
-
-        .mode {
-          color: var(--color-text-2);
-          font-size: 12px;
-          font-weight: 400;
-          line-height: 20px;
-          padding: 6px 10px;
-          align-items: center;
-          border: 1px solid var(--color-border-3);
-          border-radius: 32px;
-          box-sizing: border-box;
-          display: flex;
-          height: 32px;
-          justify-content: center;
-          cursor: pointer;
-
-          .icon {
-            width: 21px;
-            height: 20px;
-          }
-        }
-
-        .mode svg {
-          font-size: 16px;
-          margin-right: 10px;
-        }
-
-        .mode:hover,
-        .mode svg:hover {
-          background: rgba(var(--primary-6), 0.05);
-          border: 1px solid rgb(var(--primary-3));
-          color: rgb(var(--arcoblue-6));
-        }
-      }
+    .mode:hover,
+    .mode svg:hover {
+      background: rgba(var(--primary-6), 0.05);
+      border: 1px solid rgb(var(--primary-3));
+      color: rgb(var(--arcoblue-6));
+    }
+  }
     }
   }
 
@@ -330,18 +424,18 @@ const onOauth = async (source: string) => {
     z-index: 999;
 
     .beian {
-      .text {
-        font-size: 12px;
-        font-weight: 400;
-        letter-spacing: 0.2px;
-        line-height: 20px;
-        text-align: center;
-      }
+  .text {
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+    line-height: 20px;
+    text-align: center;
+  }
 
-      .below {
-        align-items: center;
-        display: flex;
-      }
+  .below {
+    align-items: center;
+    display: flex;
+  }
     }
   }
 }
@@ -351,12 +445,12 @@ const onOauth = async (source: string) => {
     display: none !important;
   }
   .login-switcher{
-      display: flex;
-      justify-content: flex-end;
-      width: 100%;
-      img{
-        cursor: pointer;
-      }
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  img{
+    cursor: pointer;
+  }
   }
   .login {
     height: 100%;
@@ -367,33 +461,33 @@ const onOauth = async (source: string) => {
     background-color: var(--color-bg-5);
 
     &-logo {
-      position: fixed;
-      top: 20px;
-      left: 30px;
-      z-index: 9999;
-      color: var(--color-text-1);
-      font-weight: 500;
-      font-size: 20px;
-      line-height: 32px;
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+  position: fixed;
+  top: 20px;
+  left: 30px;
+  z-index: 9999;
+  color: var(--color-text-1);
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 32px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-      img {
-        width: 34px;
-        height: 34px;
-        margin-right: 8px;
-      }
+  img {
+    width: 34px;
+    height: 34px;
+    margin-right: 8px;
+  }
     }
 
     &-box {
-      width: 86%;
-      max-width: 850px;
-      height: 490px;
-      display: flex;
-      z-index: 999;
-      box-shadow: 0 2px 4px 2px rgba(0, 0, 0, 0.08);
+  width: 86%;
+  max-width: 850px;
+  height: 490px;
+  display: flex;
+  z-index: 999;
+  box-shadow: 0 2px 4px 2px rgba(0, 0, 0, 0.08);
     }
   }
 
@@ -408,15 +502,15 @@ const onOauth = async (source: string) => {
     background: linear-gradient(60deg, rgb(var(--primary-6)), rgb(var(--primary-3)));
 
     &__img {
-      width: 100%;
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      top: 50%;
-      left: 50%;
-      transform: translateX(-50%) translateY(-50%);
-      transition: all 0.3s;
-      object-fit: cover;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  transition: all 0.3s;
+  object-fit: cover;
     }
   }
 
@@ -430,101 +524,101 @@ const onOauth = async (source: string) => {
     box-sizing: border-box;
 
     &__title {
-      color: var(--color-text-1);
-      font-weight: 500;
-      font-size: 20px;
-      line-height: 32px;
-      margin-bottom: 20px;
+  color: var(--color-text-1);
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 32px;
+  margin-bottom: 20px;
     }
 
     &__form {
-      :deep(.arco-tabs-nav-tab) {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+  :deep(.arco-tabs-nav-tab) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-      :deep(.arco-tabs-tab) {
-        color: var(--color-text-2);
-      }
+  :deep(.arco-tabs-tab) {
+    color: var(--color-text-2);
+  }
 
-      :deep(.arco-tabs-tab-title) {
-        font-size: 16px;
-        font-weight: 500;
-        line-height: 22px;
-      }
+  :deep(.arco-tabs-tab-title) {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 22px;
+  }
 
-      :deep(.arco-tabs-content) {
-        margin-top: 10px;
-      }
+  :deep(.arco-tabs-content) {
+    margin-top: 10px;
+  }
 
-      :deep(.arco-tabs-tab-active),
-      :deep(.arco-tabs-tab-title:hover) {
-        color: rgb(var(--arcoblue-6));
-      }
+  :deep(.arco-tabs-tab-active),
+  :deep(.arco-tabs-tab-title:hover) {
+    color: rgb(var(--arcoblue-6));
+  }
 
-      :deep(.arco-tabs-nav::before) {
-        display: none;
-      }
+  :deep(.arco-tabs-nav::before) {
+    display: none;
+  }
 
-      :deep(.arco-tabs-tab-title:before) {
-        display: none;
-      }
+  :deep(.arco-tabs-tab-title:before) {
+    display: none;
+  }
     }
 
     &__oauth {
-      margin-top: auto;
-      margin-bottom: 20px;
+  margin-top: auto;
+  margin-bottom: 20px;
 
-      :deep(.arco-divider-text) {
-        color: var(--color-text-4);
-        font-size: 12px;
-        font-weight: 400;
-        line-height: 20px;
+  :deep(.arco-divider-text) {
+    color: var(--color-text-4);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 20px;
+  }
+
+  .list {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    .item {
+      margin-right: 15px;
+    }
+
+    .mode {
+      color: var(--color-text-2);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 20px;
+      padding: 6px 10px;
+      align-items: center;
+      border: 1px solid var(--color-border-3);
+      border-radius: 32px;
+      box-sizing: border-box;
+      display: flex;
+      height: 32px;
+      justify-content: center;
+      cursor: pointer;
+
+      .icon {
+    width: 21px;
+    height: 20px;
       }
+    }
 
-      .list {
-        align-items: center;
-        display: flex;
-        justify-content: center;
-        width: 100%;
+    .mode svg {
+      font-size: 16px;
+      margin-right: 10px;
+    }
 
-        .item {
-          margin-right: 15px;
-        }
-
-        .mode {
-          color: var(--color-text-2);
-          font-size: 12px;
-          font-weight: 400;
-          line-height: 20px;
-          padding: 6px 10px;
-          align-items: center;
-          border: 1px solid var(--color-border-3);
-          border-radius: 32px;
-          box-sizing: border-box;
-          display: flex;
-          height: 32px;
-          justify-content: center;
-          cursor: pointer;
-
-          .icon {
-            width: 21px;
-            height: 20px;
-          }
-        }
-
-        .mode svg {
-          font-size: 16px;
-          margin-right: 10px;
-        }
-
-        .mode:hover {
-          background: rgba(var(--primary-6), 0.05);
-          border: 1px solid rgb(var(--primary-3));
-          color: rgb(var(--arcoblue-6));
-        }
-      }
+    .mode:hover {
+      background: rgba(var(--primary-6), 0.05);
+      border: 1px solid rgb(var(--primary-3));
+      color: rgb(var(--arcoblue-6));
+    }
+  }
     }
   }
 
@@ -543,18 +637,18 @@ const onOauth = async (source: string) => {
     z-index: 999;
 
     .beian {
-      .text {
-        font-size: 12px;
-        font-weight: 400;
-        letter-spacing: 0.2px;
-        line-height: 20px;
-        text-align: center;
-      }
+  .text {
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+    line-height: 20px;
+    text-align: center;
+  }
 
-      .below {
-        align-items: center;
-        display: flex;
-      }
+  .below {
+    align-items: center;
+    display: flex;
+  }
     }
   }
 }
