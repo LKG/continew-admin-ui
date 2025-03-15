@@ -18,9 +18,7 @@
           <img v-else src="@/assets/images/switcher-qr.png" alt="qr" @click="toggleLoginMode" />
         </div>
         <div v-if="isQr" class="login-right">
-          <div>
-            <h2>微信扫码 安全登录</h2>
-          </div>
+          <h2>微信扫码 安全登录</h2>
           <div class="qr-container">
             <div v-if="qrStatus === 'loading'" class="qrcode-mask">
               <a-button type="text" loading long>Loading...</a-button>
@@ -39,7 +37,7 @@
             <vue-qr
               v-if="qrStatus !== 'active'"
               text="https://www.gongwk.com/"
-              style="box-shadow: 0 0 8px #DDD;"
+              style="box-shadow: 0 0 2px #DDD;"
               :correct-level="3"
               logo-src="/logo.png"
               :logo-scale="40"
@@ -48,7 +46,7 @@
             />
             <vue-qr
               v-if="qrStatus === 'active'"
-              style="box-shadow: 0 0 8px #DDD;"
+              style="box-shadow: 0 0 2px #DDD;"
               text="https://www.gongwk.com/"
               logo-src="/logo.png"
               :correct-level="3"
@@ -64,12 +62,12 @@
               :now="Date.now()"
               @finish="handleFinish"
             />
-            <a-link :hoverable="false" style="width: 100%;display: flex;color: #000;" @click="loadQrCode">
+            <a-link :hoverable="false" style="width: 100%;display: flex;color: var(--color-text-2);" @click="loadQrCode">
               <template #icon>
                 <icon-refresh />
               </template>刷新二维码
             </a-link>
-            <a-link :hoverable="false" style="width: 100%;display: flex;color: #000;">微信扫码关注登录注册</a-link>
+            <a-link :hoverable="false" style="width: 100%;display: flex;color:var(--color-text-2);">微信扫码关注登录注册</a-link>
           </a-space>
         </div>
         <div v-else class="login-right">
@@ -225,16 +223,18 @@ const loadQrCode = () => {
 
 <style scoped lang="scss">
 .qr-container {
-  padding-top: 30px;
+  // padding: 10px;
   display: flex;
   position: relative;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   // overflow: hidden;
-  width: 100%;
+  // width: 100%;
   height: 100%;
-  margin-bottom: 10px;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
   .qrcode-mask{
     position: absolute;
     inset-block-start: 0;
@@ -243,7 +243,7 @@ const loadQrCode = () => {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    // align-items: center;
     width: 100%;
     height: 100%;
     background:rgba(255, 255, 255, 0.96);
@@ -259,13 +259,17 @@ const loadQrCode = () => {
     display: none !important;
     background-color: white !important;
   }
-  .login-switcher{
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-  img{
-    cursor: pointer;
+  .login-box{
+    background: var(--color-bg-1);
   }
+  .login-switcher{
+    display: flex;
+    justify-content: flex-end;
+    background: var(--color-bg-1);
+    width: 100%;
+    img{
+      cursor: pointer;
+    }
   }
   .login {
     height: 100%;
@@ -283,7 +287,7 @@ const loadQrCode = () => {
   line-height: 32px;
   display: flex;
   padding: 0 20px;
-  align-items: center;
+  // align-items: center;
   justify-content: start;
   background-image: url('/src/assets/images/login_h5.jpg');
   background-size: 100% 100%;
@@ -453,13 +457,17 @@ const loadQrCode = () => {
   .h5 {
     display: none !important;
   }
-  .login-switcher{
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-  img{
-    cursor: pointer;
+  .login-box{
+    background: var(--color-bg-1);
   }
+  .login-switcher{
+    display: flex;
+    justify-content: flex-end;
+    background: var(--color-bg-1);
+    width: 100%;
+    img{
+      cursor: pointer;
+    }
   }
   .login {
     height: 100%;
