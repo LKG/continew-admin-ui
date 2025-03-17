@@ -100,6 +100,9 @@
               <a class="item" title="使用 飞书 账号登录" @click="onOauth('lark')">
                 <icon-lark-color :size="24" />
               </a>
+              <a class="item" title="使用 Gitee 账号登录" @click="onOauth('gitee')">
+                <GiSvgIcon name="gitee" :size="24" />
+              </a>
               <a class="item" title="使用 GitHub 账号登录" @click="onOauth('github')">
                 <icon-github :size="24" />
               </a>
@@ -164,6 +167,9 @@
         <a class="item" title="使用 飞书 账号登录" @click="onOauth('lark')">
           <icon-lark-color :size="24" />
         </a>
+        <a class="item" title="使用 Gitee 账号登录" @click="onOauth('gitee')">
+          <GiSvgIcon name="gitee" :size="24" />
+        </a>
         <a class="item" title="使用 GitHub 账号登录" @click="onOauth('github')">
           <icon-github :size="24" />
         </a>
@@ -186,7 +192,7 @@ import { useDevice } from '@/hooks'
 defineOptions({ name: 'Login' })
 // status 的值控制二维码的状态，提供了 active、expired、loading、scanned
 
-const { isDesktop } = useDevice(true)
+const { isDesktop } = useDevice()
 const appStore = useAppStore()
 const title = computed(() => appStore.getTitle())
 const logo = computed(() => appStore.getLogo())
