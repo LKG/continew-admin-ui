@@ -90,10 +90,10 @@
 </template>
 
 <script setup lang="ts">
+import type { TableInstance } from '@arco-design/web-vue'
 import { Message, Modal } from '@arco-design/web-vue'
 import MenuAddModal from './MenuAddModal.vue'
 import { type MenuQuery, type MenuResp, clearMenuCache, deleteMenu, listMenu } from '@/apis/system/menu'
-import type { TableInstanceColumns } from '@/components/GiTable/type'
 import type GiTable from '@/components/GiTable/index.vue'
 import { useTable } from '@/hooks'
 import { isMobile } from '@/utils'
@@ -138,7 +138,7 @@ const dataList = computed(() => {
   return searchData(title.value)
 })
 
-const columns: TableInstanceColumns[] = [
+const columns: TableInstance['columns'] = [
   { title: '菜单标题', dataIndex: 'title', slotName: 'title', width: 170, fixed: !isMobile() ? 'left' : undefined },
   { title: '类型', dataIndex: 'type', slotName: 'type', align: 'center' },
   { title: '状态', dataIndex: 'status', slotName: 'status', align: 'center' },

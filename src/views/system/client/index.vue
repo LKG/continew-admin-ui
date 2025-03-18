@@ -63,10 +63,10 @@
 
 <script setup lang="tsx">
 import type { LabelValue } from '@arco-design/web-vue/es/tree-select/interface'
+import type { TableInstance } from '@arco-design/web-vue'
 import ClientAddModal from './ClientAddModal.vue'
 import ClientDetailDrawer from './ClientDetailDrawer.vue'
 import { type ClientQuery, type ClientResp, deleteClient, listClient } from '@/apis/system/client'
-import type { TableInstanceColumns } from '@/components/GiTable/type'
 import { DisEnableStatusList } from '@/constant/common'
 import { useTable } from '@/hooks'
 import { useDict } from '@/hooks/app'
@@ -105,7 +105,7 @@ const {
   search,
   handleDelete,
 } = useTable((page) => listClient({ ...queryForm, ...page }), { immediate: true })
-const columns: TableInstanceColumns[] = [
+const columns: TableInstance['columns'] = [
   {
     title: '序号',
     width: 66,

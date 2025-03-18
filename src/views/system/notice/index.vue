@@ -51,8 +51,8 @@
 </template>
 
 <script setup lang="ts">
+import type { TableInstance } from '@arco-design/web-vue'
 import { type NoticeQuery, type NoticeResp, deleteNotice, listNotice } from '@/apis/system'
-import type { TableInstanceColumns } from '@/components/GiTable/type'
 import { useTable } from '@/hooks'
 import { useDict } from '@/hooks/app'
 import { isMobile } from '@/utils'
@@ -74,7 +74,7 @@ const {
   search,
   handleDelete,
 } = useTable((page) => listNotice({ ...queryForm, ...page }), { immediate: true })
-const columns: TableInstanceColumns[] = [
+const columns: TableInstance['columns'] = [
   {
     title: '序号',
     width: 66,
