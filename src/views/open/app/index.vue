@@ -86,6 +86,7 @@
 </template>
 
 <script setup lang="ts">
+import type { TableInstance } from '@arco-design/web-vue'
 import { Message, Modal } from '@arco-design/web-vue'
 import AppAddModal from './AppAddModal.vue'
 import AppDetailDrawer from './AppDetailDrawer.vue'
@@ -98,7 +99,6 @@ import {
   listApp,
   resetAppSecret,
 } from '@/apis/open/app'
-import type { TableInstanceColumns } from '@/components/GiTable/type'
 import { useDownload, useTable } from '@/hooks'
 import { isMobile } from '@/utils'
 import has from '@/utils/has'
@@ -116,7 +116,7 @@ const {
   search,
   handleDelete,
 } = useTable((page) => listApp({ ...queryForm, ...page }), { immediate: true })
-const columns: TableInstanceColumns[] = [
+const columns: TableInstance['columns'] = [
   {
     title: '序号',
     width: 66,
