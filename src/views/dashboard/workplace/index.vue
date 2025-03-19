@@ -28,9 +28,9 @@
         <a-grid-item class="panel" :span="24">
           <Notice />
         </a-grid-item>
-        <a-grid-item class="panel" :span="24">
+        <!-- <a-grid-item class="panel" :span="24">
           <Docs />
-        </a-grid-item>
+        </a-grid-item> -->
       </a-grid>
     </div>
   </div>
