@@ -118,7 +118,7 @@
       </div>
     </div>
 
-    <ToggleDark class="theme-btn" />
+    <GiThemeBtn class="theme-btn" />
     <Background />
   </div>
 
