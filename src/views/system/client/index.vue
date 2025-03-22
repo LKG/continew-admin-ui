@@ -1,7 +1,6 @@
 <template>
   <div class="gi_table_page">
     <GiTable
-      title=""
       row-key="id"
       :data="dataList"
       :columns="columns"
@@ -151,8 +150,8 @@ const columns: TableInstance['columns'] = [
       return <GiCellTag value={record.clientType} dict={client_type.value} />
     },
   },
-  { title: 'Token 最低活跃频率', dataIndex: 'activeTimeout', slotName: 'activeTimeout', width: 180, align: 'center', render: ({ record }) => `${record.activeTimeout} s` },
-  { title: 'Token 有效期', dataIndex: 'timeout', slotName: 'timeout', align: 'center', render: ({ record }) => `${record.timeout} s` },
+  { title: 'Token 最低活跃频率', dataIndex: 'activeTimeout', slotName: 'activeTimeout', width: 180, align: 'center', render: ({ record }) => `${record.activeTimeout} 秒` },
+  { title: 'Token 有效期', dataIndex: 'timeout', slotName: 'timeout', align: 'center', render: ({ record }) => `${record.timeout} 秒` },
   {
     title: '状态',
     dataIndex: 'status',
