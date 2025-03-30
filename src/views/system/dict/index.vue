@@ -36,11 +36,12 @@
                 </a-button>
               </template>
               <template #label="{ record }">
-                ·                <a-tag v-if="record.color === 'primary'" color="arcoblue">{{ record.label }}</a-tag>
+                <a-tag v-if="record.color === 'primary'" color="arcoblue">{{ record.label }}</a-tag>
                 <a-tag v-else-if="record.color === 'success'" color="green">{{ record.label }}</a-tag>
                 <a-tag v-else-if="record.color === 'warning'" color="orangered">{{ record.label }}</a-tag>
                 <a-tag v-else-if="record.color === 'error'" color="red">{{ record.label }}</a-tag>
                 <a-tag v-else-if="record.color === 'default'" color="gray">{{ record.label }}</a-tag>
+                <a-tag v-else style="color: '{{ record.color }}';">{{ record.label }}</a-tag>
               </template>
               <template #status="{ record }">
                 <GiCellStatus :status="record.status" />
