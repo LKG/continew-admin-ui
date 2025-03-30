@@ -11,11 +11,17 @@
   >
     <GiForm ref="formRef" v-model="form" :columns="columns">
       <template #color>
-        <a-input v-model="form.color" placeholder="请选择或输入标签颜色" allow-clear>
-          <template #suffix>
-            <a-color-picker v-model="form.color" />
-          </template>
-        </a-input>
+        <a-select
+          v-model="form.color"
+          placeholder="请选择颜色"
+          allow-clear
+        >
+          <a-option value="primary"><a-tag color="arcoblue">主要（极致蓝）</a-tag></a-option>
+          <a-option value="success"><a-tag color="green">成功（仙野绿）</a-tag></a-option>
+          <a-option value="warning"><a-tag color="orangered">警告（活力橙）</a-tag></a-option>
+          <a-option value="error"><a-tag color="red">错误（浪漫红）</a-tag></a-option>
+          <a-option value="default"><a-tag color="gray">默认（中性灰）</a-tag></a-option>
+        </a-select>
       </template>
     </GiForm>
   </a-modal>
@@ -55,7 +61,6 @@ const itemSelectTree = computed(() => {
   }))
 })
 const [form, resetForm] = useResetReactive({
-  color: 'blue',
   sort: 999,
   parentId: '0',
   status: 1,

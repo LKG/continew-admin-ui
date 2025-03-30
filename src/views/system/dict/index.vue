@@ -26,7 +26,7 @@
                 </a-button>
               </template>
               <template #toolbar-right>
-                <a-button v-permission="['system:dict:item:add']" type="primary" @click="onAdd('0')">
+                <a-button v-permission="['system:dict:item:create']" type="primary" @click="onAdd(null)">
                   <template #icon><icon-plus /></template>
                   <template #default>新增</template>
                 </a-button>
@@ -36,7 +36,11 @@
                 </a-button>
               </template>
               <template #label="{ record }">
-                <a-tag :color="record.color">{{ record.label }}</a-tag>
+                ·                <a-tag v-if="record.color === 'primary'" color="arcoblue">{{ record.label }}</a-tag>
+                <a-tag v-else-if="record.color === 'success'" color="green">{{ record.label }}</a-tag>
+                <a-tag v-else-if="record.color === 'warning'" color="orangered">{{ record.label }}</a-tag>
+                <a-tag v-else-if="record.color === 'error'" color="red">{{ record.label }}</a-tag>
+                <a-tag v-else-if="record.color === 'default'" color="gray">{{ record.label }}</a-tag>
               </template>
               <template #status="{ record }">
                 <GiCellStatus :status="record.status" />
@@ -68,6 +72,7 @@
 <script setup lang="ts">
 import type { TableInstance } from '@arco-design/web-vue'
 import { Message, Modal } from '@arco-design/web-vue'
+import { number } from 'echarts'
 import DictTree from './tree/index.vue'
 import DictItemAddModal from './DictItemAddModal.vue'
 import { type DictItemQuery, type DictItemResp, clearDictCache, deleteDictItem, listDictItemTree } from '@/apis/system/dict'
@@ -167,8 +172,9 @@ const handleSelectDict = (dict: { dictId: string, dictName: string, dictCode: st
 
 const DictItemAddModalRef = ref<InstanceType<typeof DictItemAddModal>>()
 // 新增
-const onAdd = (record: DictItemResp) => {
-  DictItemAddModalRef.value?.onAdd(queryForm.dictId, record.id)
+const onAdd = (record: DictItemResp | null) => {
+  const id = record ? record.id : '0'
+  DictItemAddModalRef.value?.onAdd(queryForm.dictId, id)
 }
 
 // 修改
