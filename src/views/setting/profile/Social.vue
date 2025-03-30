@@ -51,7 +51,6 @@ import { listUserSocial, socialAuth, unbindSocialAccount } from '@/apis'
 
 const socialList = ref<any>([])
 const modeList = ref<ModeItem[]>([])
-
 // 初始化数据
 const initData = () => {
   listUserSocial().then((res) => {
@@ -73,6 +72,39 @@ const initData = () => {
         jumpMode: 'link',
         status: socialList.value.includes('GITHUB'),
       },
+      {
+        title: '绑定 weibo',
+        icon: 'weibo',
+        subtitle: `${socialList.value.includes('weibo') ? '' : '绑定后，'}可通过 微博 进行登录`,
+        type: 'weibo',
+        jumpMode: 'link',
+        status: socialList.value.includes('weibo'),
+      },
+      {
+        title: '绑定 QQ',
+        icon: 'qq',
+        subtitle: `${socialList.value.includes('QQ') ? '' : '绑定后，'}可通过 qq 进行登录`,
+        type: 'qq',
+        jumpMode: 'link',
+        status: socialList.value.includes('QQ'),
+      },
+      {
+        title: '绑定 lark',
+        icon: 'lark-color',
+        subtitle: `${socialList.value.includes('lark') ? '' : '绑定后，'}可通过 lark 进行登录`,
+        type: 'lark',
+        jumpMode: 'link',
+        status: socialList.value.includes('lark'),
+      },
+      {
+        title: '绑定 tiktok',
+        icon: 'tiktok-color',
+        subtitle: `${socialList.value.includes('tiktok') ? '' : '绑定后，'}可通过 抖音 进行登录`,
+        type: 'tiktok',
+        jumpMode: 'link',
+        status: socialList.value.includes('tiktok'),
+      },
+
     ]
   })
 }
