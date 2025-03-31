@@ -2,7 +2,12 @@
   <a-card title="第三方账号" bordered class="gradient-card">
     <div v-for="item in modeList" :key="item.title">
       <div class="item">
-        <div class="icon-wrapper"><GiSvgIcon :name="item.icon" :size="26" /></div>
+        <div class="icon-wrapper">
+          <!-- <GiSvgIcon :name="item.icon" :size="26" /> -->
+          <!-- <GiSvgIcon :name="item.icon" :size="26" /> -->
+          <GiSvgIcon v-if="typeof item.icon === 'string'" :name="item.icon" :size="26" />
+          <component :is="item.icon" v-else :size="26" />
+        </div>
         <div class="info">
           <div class="info-top">
             <span class="label">{{ item.title }}</span>
@@ -24,7 +29,7 @@
             v-if="item.jumpMode === 'modal'"
             class="btn"
             :type="item.status ? 'secondary' : 'primary'"
-            @click="onUpdate(item.type, item.status)"
+            @click="onUpdate(item.type)"
           >
             {{ item.status ? '修改' : '绑定' }}
           </a-button>
@@ -45,6 +50,7 @@
 
 <script setup lang="ts">
 import { Message } from '@arco-design/web-vue'
+import { IconLarkColor, IconQq, IconTiktokColor, IconWechat, IconWeibo } from '@arco-design/web-vue/es/icon'
 import type { ModeItem } from '../type'
 import VerifyModel from '../components/VerifyModel.vue'
 import { listUserSocial, socialAuth, unbindSocialAccount } from '@/apis'
@@ -73,36 +79,53 @@ const initData = () => {
         status: socialList.value.includes('GITHUB'),
       },
       {
-        title: '绑定 weibo',
-        icon: 'weibo',
+        title: '绑定 微博',
+        icon: IconWeibo,
         subtitle: `${socialList.value.includes('weibo') ? '' : '绑定后，'}可通过 微博 进行登录`,
         type: 'weibo',
         jumpMode: 'link',
         status: socialList.value.includes('weibo'),
       },
       {
+        title: '绑定百度账号',
+        icon: 'baidu',
+        subtitle: `${socialList.value.includes('baidu') ? '' : '绑定后，'}可通过 百度账号 进行登录`,
+        type: 'baidu',
+        jumpMode: 'link',
+        status: socialList.value.includes('baidu'),
+      },
+
+      {
         title: '绑定 QQ',
-        icon: 'qq',
+        icon: IconQq,
         subtitle: `${socialList.value.includes('QQ') ? '' : '绑定后，'}可通过 qq 进行登录`,
         type: 'qq',
         jumpMode: 'link',
         status: socialList.value.includes('QQ'),
       },
       {
-        title: '绑定 lark',
-        icon: 'lark-color',
-        subtitle: `${socialList.value.includes('lark') ? '' : '绑定后，'}可通过 lark 进行登录`,
+        title: '绑定 飞书',
+        icon: IconLarkColor,
+        subtitle: `${socialList.value.includes('lark') ? '' : '绑定后，'}可通过 飞书 进行登录`,
         type: 'lark',
         jumpMode: 'link',
         status: socialList.value.includes('lark'),
       },
       {
-        title: '绑定 tiktok',
-        icon: 'tiktok-color',
+        title: '绑定 抖音',
+        icon: IconTiktokColor,
         subtitle: `${socialList.value.includes('tiktok') ? '' : '绑定后，'}可通过 抖音 进行登录`,
         type: 'tiktok',
         jumpMode: 'link',
         status: socialList.value.includes('tiktok'),
+      },
+      {
+        title: '绑定 微信',
+        icon: IconWechat,
+        subtitle: `${socialList.value.includes('wechat') ? '' : '绑定后，'}可通过 微信 进行登录`,
+        type: 'wechat',
+        jumpMode: 'link',
+        status: socialList.value.includes('wechat'),
       },
 
     ]

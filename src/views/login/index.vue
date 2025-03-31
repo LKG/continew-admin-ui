@@ -101,7 +101,7 @@
                 <icon-lark-color :size="24" />
               </a>
               <a class="item" title="使用 Gitee 账号登录" @click="onOauth('gitee')">
-                <GiSvgIcon name="gitee" :size="24" />
+                <icon-gitee :size="24" />
               </a>
               <a class="item" title="使用 GitHub 账号登录" @click="onOauth('github')">
                 <icon-github :size="24" />
