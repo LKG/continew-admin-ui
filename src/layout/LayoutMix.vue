@@ -4,7 +4,21 @@
       v-if="isDesktop" class="layout-mix-left" :class="{ 'app-menu-dark': appStore.menuDark }"
       :style="appStore.menuDark ? appStore.themeCSSVar : undefined"
     >
-      <Logo :collapsed="appStore.menuCollapse"></Logo>
+      <div style="display: inline-flex;">
+        <div
+          class="ac-navbar-left-panel-trigger ac-navbar-left-panel-mobile-trigger" role="combobox" tabindex="0" aria-expanded="false"
+          aria-controls="arco-logo-panel-popup" aria-haspopup="true" aria-label="Hover to Open "
+        >
+          <div class="ac-navbar-left-panel-trigger-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M2.5 5L5 5L5 2.5L2.5 2.5L2.5 5ZM5 11.25L2.5 11.25L2.5 8.75L5 8.75L5 11.25ZM17.5 11.25L15 11.25L15 8.75L17.5 8.75L17.5 11.25ZM8.75 11.25L11.25 11.25L11.25 8.75L8.75 8.75L8.75 11.25ZM5 17.5L2.5 17.5L2.5 15L5 15L5 17.5ZM15 17.5L17.5 17.5L17.5 15L15 15L15 17.5ZM11.25 17.5L8.75 17.5L8.75 15L11.25 15L11.25 17.5ZM17.5 5L15 5L15 2.5L17.5 2.5L17.5 5ZM8.75 5L11.25 5L11.25 2.5L8.75 2.5L8.75 5Z" fill="currentColor"></path>
+            </svg>
+          </div>
+        </div>
+        <!-- logo -->
+        <Logo :collapsed="appStore.menuCollapse"></Logo>
+      </div>
+
       <Menu :menus="leftMenus" :menu-style="{ width: '220px', flex: 1 }"></Menu>
     </section>
 
@@ -106,7 +120,26 @@ watch(
 :deep(.arco-menu-pop) {
   white-space: nowrap;
 }
-
+.ac-navbar-left-panel-trigger {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-1);
+    width: 30px;
+    height: 60px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.ac-navbar-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 180px;
+    height: 60px;
+    box-sizing: border-box;
+    text-decoration: none;
+}
 :deep(.arco-menu.arco-menu-vertical.arco-menu-collapsed) {
 
   // Menu菜单组件修改

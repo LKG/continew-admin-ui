@@ -46,6 +46,14 @@
         <GiThemeBtn></GiThemeBtn>
       </a-tooltip>
 
+      <a-tooltip content="语言切换" position="bottom">
+        <a-button size="mini" class="gi_hover_btn" @click="locale">
+          <template #icon>
+            <icon-language :size="18" />
+          </template>
+        </a-button>
+      </a-tooltip>
+
       <!-- 管理员账户 -->
       <a-dropdown trigger="hover">
         <a-row align="center" :wrap="false" class="user">
@@ -74,6 +82,8 @@
 import { Modal } from '@arco-design/web-vue'
 import { useFullscreen } from '@vueuse/core'
 import { onMounted, ref } from 'vue'
+import zhCN from '@arco-design/web-vue/es/locale/lang/zh-cn'
+import enUS from '@arco-design/web-vue/es/locale/lang/en-us'
 import Message from './Message.vue'
 import SettingDrawer from './SettingDrawer.vue'
 import Search from './Search.vue'
@@ -83,7 +93,14 @@ import { getToken } from '@/utils/auth'
 import { useBreakpoint, useDevice } from '@/hooks'
 
 defineOptions({ name: 'HeaderRight' })
-
+const locales = {
+  'zh-CN': zhCN,
+  'en-US': enUS,
+}
+const localeType = ref('es-ES')
+const locale = () => {
+  return locales[localeType.value] || zhCN
+}
 const { isDesktop } = useDevice()
 const { breakpoint } = useBreakpoint()
 let socket: WebSocket
@@ -151,6 +168,7 @@ const logout = () => {
 
 onMounted(() => {
   getMessageCount()
+  locale()
 })
 </script>
 

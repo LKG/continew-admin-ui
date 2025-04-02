@@ -1,5 +1,5 @@
 <template>
-  <a-config-provider update-at-scroll>
+  <a-config-provider update-at-scroll :locale="locale">
     <template #loading>
       <GiSvgIcon name="loading-bold" :size="30" class="loading-icon" />
     </template>
@@ -19,6 +19,7 @@
 import { useAppStore, useUserStore } from '@/stores'
 
 defineOptions({ name: 'App' })
+
 const userStore = useUserStore()
 const appStore = useAppStore()
 appStore.initTheme()

@@ -1,7 +1,6 @@
 <template>
   <div class="gi_table_page">
     <GiTable
-      title="友情链接管理"
       row-key="id"
       :data="dataList"
       :columns="columns"
@@ -13,7 +12,7 @@
       @refresh="search"
     >
       <template #toolbar-left>
-	    <a-input-search v-model="queryForm.name" placeholder="请输入友链名称" allow-clear @search="search" />
+        <a-input-search v-model="queryForm.name" placeholder="请输入友链名称" allow-clear @search="search" />
         <DateRangePicker v-model="queryForm.createTime" format="YYYY-MM-DD" @change="search" />
         <a-select
           v-model="queryForm.checkStatus"
@@ -24,7 +23,7 @@
           @change="search"
         />
         <DateRangePicker v-model="queryForm.expiryTime" format="YYYY-MM-DD" @change="search" />
-	    <a-input-search v-model="queryForm.status" placeholder="请输入状态" allow-clear @search="search" />
+        <a-input-search v-model="queryForm.status" placeholder="请输入状态" allow-clear @search="search" />
         <a-button @click="reset">
           <template #icon><icon-refresh /></template>
           <template #default>重置</template>
@@ -42,6 +41,9 @@
       </template>
       <template #checkStatus="{ record }">
         <GiCellTag :value="record.checkStatus" :dict="check_status" />
+      </template>
+      <template #name="{ record }">
+        <GiCellAvatar :avatar="record.logo" :name="record.name" />
       </template>
       <template #action="{ record }">
         <a-space>
@@ -68,7 +70,7 @@
 <script setup lang="ts">
 import FriendLinkAddModal from './FriendLinkAddModal.vue'
 import FriendLinkDetailDrawer from './FriendLinkDetailDrawer.vue'
-import { type FriendLinkResp, type FriendLinkQuery, deleteFriendLink, exportFriendLink, listFriendLink } from '@/apis/cms/friendLink'
+import { type FriendLinkQuery, type FriendLinkResp, deleteFriendLink, exportFriendLink, listFriendLink } from '@/apis/cms/friendLink'
 import type { TableInstanceColumns } from '@/components/GiTable/type'
 import { useDownload, useTable } from '@/hooks'
 import { useDict } from '@/hooks/app'
@@ -85,7 +87,7 @@ const queryForm = reactive<FriendLinkQuery>({
   checkStatus: undefined,
   expiryTime: undefined,
   status: undefined,
-  sort: ['id,desc']
+  sort: ['id,desc'],
 })
 
 const {
@@ -93,21 +95,16 @@ const {
   loading,
   pagination,
   search,
-  handleDelete
+  handleDelete,
 } = useTable((page) => listFriendLink({ ...queryForm, ...page }), { immediate: true })
 const columns = ref<TableInstanceColumns[]>([
-  { title: 'id 主键', dataIndex: 'id', slotName: 'id' },
   { title: '友链名称', dataIndex: 'name', slotName: 'name' },
   { title: '友链地址', dataIndex: 'url', slotName: 'url' },
-  { title: '', dataIndex: 'createUserString', slotName: 'createUser' },
   { title: '创建时间', dataIndex: 'createTime', slotName: 'createTime' },
-  { title: '', dataIndex: 'updateUserString', slotName: 'updateUser' },
-  { title: '修改时间', dataIndex: 'updateTime', slotName: 'updateTime' },
-  { title: '审核状态', dataIndex: 'checkStatus', slotName: 'checkStatus' },
-  { title: '', dataIndex: 'expiryTime', slotName: 'expiryTime' },
+  // { title: '审核状态', dataIndex: 'checkStatus', slotName: 'checkStatus' },
   { title: '状态', dataIndex: 'status', slotName: 'status' },
-  { title: '备注', dataIndex: 'remark', slotName: 'remark' },
-  { title: 'logo', dataIndex: 'logo', slotName: 'logo' },
+  // { title: '备注', dataIndex: 'remark', slotName: 'remark' },
+  // { title: 'logo', dataIndex: 'logo', slotName: 'logo' },
   { title: '上链地址', dataIndex: 'requestUrl', slotName: 'requestUrl' },
   {
     title: '操作',
@@ -116,9 +113,9 @@ const columns = ref<TableInstanceColumns[]>([
     width: 160,
     align: 'center',
     fixed: !isMobile() ? 'right' : undefined,
-    show: has.hasPermOr(['cms:friendLink:detail', 'cms:friendLink:update', 'cms:friendLink:delete'])
-  }
-]);
+    show: has.hasPermOr(['cms:friendLink:detail', 'cms:friendLink:update', 'cms:friendLink:delete']),
+  },
+])
 
 // 重置
 const reset = () => {
@@ -134,7 +131,7 @@ const reset = () => {
 const onDelete = (record: FriendLinkResp) => {
   return handleDelete(() => deleteFriendLink(record.id), {
     content: `是否确定删除该条数据？`,
-    showModal: true
+    showModal: true,
   })
 }
 
