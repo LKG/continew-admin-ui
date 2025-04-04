@@ -275,6 +275,11 @@
   }
 }
 
+// 确保表格右侧边框显示
+.arco-table-scroll-y {
+  border-right: 1px solid var(--color-border-table);
+}
+
 // 表格类名，高度自适应，分页始终固定在最底部
 .gi_full_table {
   flex: 1;
