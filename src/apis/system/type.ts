@@ -4,7 +4,7 @@ export interface UserResp {
   username: string
   nickname: string
   avatar: string
-  gender: number
+  gender: 0 | 1 | 2
   email: string
   phone: string
   description: string

@@ -62,6 +62,7 @@ const itemSelectTree = computed(() => {
 })
 const [form, resetForm] = useResetReactive({
   sort: 999,
+  color: 'primary',
   parentId: '0',
   status: 1,
 })

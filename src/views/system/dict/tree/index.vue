@@ -54,7 +54,7 @@ import { type DictResp, deleteDict, listDict } from '@/apis/system/dict'
 import has from '@/utils/has'
 
 const emit = defineEmits<{
-  (e: 'node-click', dict: { dictId: string, dictName?: string, dictCode?: string }): void
+  (e: 'node-click', dict: { dictId: string, dictName: string, dictCode: string }): void
 }>()
 
 interface TreeItem extends DictResp {
@@ -72,8 +72,8 @@ const select = (keys: Array<any>) => {
   const selectedDict = dataList.value.find((item) => item.id === keys[0])
   emit('node-click', {
     dictId: keys[0],
-    dictName: selectedDict?.name,
-    dictCode: selectedDict?.code,
+    dictName: selectedDict?.name || '',
+    dictCode: selectedDict?.code || '',
   })
 }
 

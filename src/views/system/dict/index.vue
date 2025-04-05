@@ -1,73 +1,4 @@
 <template>
-  <div class="gi_page">
-    <SplitPanel>
-      <template #left>
-        <DictTree @node-click="handleSelectDict" />
-      </template>
-      <template #main>
-        <a-row align="stretch" :gutter="14" class="h-full page_content">
-          <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" :xxl="24" flex="1" class="h-full overflow-hidden">
-            <GiTable
-              row-key="id"
-              :data="dataList"
-              :columns="columns"
-              :loading="loading"
-              :scroll="{ x: '100%', y: '100%', minWidth: 600 }"
-              :pagination="false"
-              :disabled-tools="['size']"
-              :disabled-column-keys="['label']"
-              @refresh="search"
-            >
-              <template #toolbar-left>
-                <a-input-search v-model="queryForm.description" placeholder="搜索标签/描述" allow-clear @search="search" />
-                <a-button @click="reset">
-                  <template #icon><icon-refresh /></template>
-                  <template #default>重置</template>
-                </a-button>
-              </template>
-              <template #toolbar-right>
-                <a-button v-permission="['system:dict:item:create']" type="primary" @click="onAdd(null)">
-                  <template #icon><icon-plus /></template>
-                  <template #default>新增</template>
-                </a-button>
-                <a-button v-permission="['system:dict:item:clearCache']" type="outline" status="warning" @click="onClearCache">
-                  <template #icon><icon-delete /></template>
-                  <template #default>清除缓存</template>
-                </a-button>
-              </template>
-              <template #label="{ record }">
-                <a-tag v-if="record.color === 'primary'" color="arcoblue">{{ record.label }}</a-tag>
-                <a-tag v-else-if="record.color === 'success'" color="green">{{ record.label }}</a-tag>
-                <a-tag v-else-if="record.color === 'warning'" color="orangered">{{ record.label }}</a-tag>
-                <a-tag v-else-if="record.color === 'error'" color="red">{{ record.label }}</a-tag>
-                <a-tag v-else-if="record.color === 'default'" color="gray">{{ record.label }}</a-tag>
-                <a-tag v-else style="color: '{{ record.color }}';">{{ record.label }}</a-tag>
-              </template>
-              <template #status="{ record }">
-                <GiCellStatus :status="record.status" />
-              </template>
-              <template #action="{ record }">
-                <a-space>
-                  <a-link v-permission="['system:dict:item:update']" title="修改" @click="onUpdate(record)">修改</a-link>
-                  <a-link
-                    v-permission="['system:dict:item:delete']"
-                    status="danger"
-                    title="删除"
-                    @click="onDelete(record)"
-                  >
-                    删除
-                  </a-link>
-                  <a-link v-permission="['system:dict:item:add']" title="新增" @click="onAdd(record)">新增</a-link>
-                </a-space>
-              </template>
-            </GiTable>
-          </a-col>
-        </a-row>
-      </template>
-    </SplitPanel>
-
-    <DictItemAddModal ref="DictItemAddModalRef" :items="dataList" @save-success="search" />
-  </div>
   <GiPageLayout>
     <template #left>
       <DictTree @node-click="handleSelectDict" />
@@ -75,6 +6,7 @@
     <a-row align="stretch" :gutter="14" class="h-full page_content">
       <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" :xxl="24" flex="1" class="h-full overflow-hidden">
         <GiTable
+          ref="tableRef"
           row-key="id"
           :data="dataList"
           :columns="columns"
@@ -93,7 +25,7 @@
             </a-button>
           </template>
           <template #toolbar-right>
-            <a-button v-permission="['system:dict:item:create']" type="primary" @click="onAdd">
+            <a-button v-permission="['system:dict:item:create']" type="primary" @click="onAdd()">
               <template #icon><icon-plus /></template>
               <template #default>新增</template>
             </a-button>
@@ -101,7 +33,18 @@
               <template #icon><icon-delete /></template>
               <template #default>清除缓存</template>
             </a-button>
+            <a-button @click="onExpanded">
+              <template #icon>
+                <icon-list v-if="isExpanded" />
+                <icon-mind-mapping v-else />
+              </template>
+              <template #default>
+                <span v-if="!isExpanded">展开</span>
+                <span v-else>折叠</span>
+              </template>
+            </a-button>
           </template>
+
           <template #label="{ record }">
             <a-tag v-if="record.color === 'primary'" color="arcoblue">{{ record.label }}</a-tag>
             <a-tag v-else-if="record.color === 'success'" color="green">{{ record.label }}</a-tag>
@@ -123,23 +66,23 @@
               >
                 删除
               </a-link>
+              <a-link v-permission="['system:dict:item:add']" title="新增" @click="onAdd(record)">新增</a-link>
             </a-space>
           </template>
         </GiTable>
       </a-col>
     </a-row>
 
-    <DictItemAddModal ref="DictItemAddModalRef" @save-success="search" />
+    <DictItemAddModal ref="DictItemAddModalRef" :items="dataList" @save-success="search" />
   </GiPageLayout>
-  >>>>>>> dev
 </template>
 
 <script setup lang="ts">
 import type { TableInstance } from '@arco-design/web-vue'
 import { Message, Modal } from '@arco-design/web-vue'
-import { number } from 'echarts'
 import DictTree from './tree/index.vue'
 import DictItemAddModal from './DictItemAddModal.vue'
+import type GiTable from '@/components/GiTable/index.vue'
 import { type DictItemQuery, type DictItemResp, clearDictCache, deleteDictItem, listDictItemTree } from '@/apis/system/dict'
 import { useTable } from '@/hooks'
 import { isMobile } from '@/utils'
@@ -160,12 +103,12 @@ const {
   handleDelete,
 } = useTable((page) => listDictItemTree({ ...queryForm, ...page }), { immediate: false })
 const columns: TableInstance['columns'] = [
-  {
-    title: '序号',
-    width: 66,
-    align: 'center',
-    render: ({ rowIndex }) => h('span', {}, rowIndex + 1 + (pagination.current - 1) * pagination.pageSize),
-  },
+  // {
+  //   title: '序号',
+  //   width: 66,
+  //   align: 'center',
+  //   render: ({ rowIndex }) => h('span', {}, rowIndex + 1 + (pagination.current - 1) * pagination.pageSize),
+  // },
   { title: '标签', dataIndex: 'label', slotName: 'label', minWidth: 100, align: 'center' },
   { title: '值', dataIndex: 'value', minWidth: 100, align: 'center', ellipsis: true, tooltip: true },
   { title: '状态', dataIndex: 'status', slotName: 'status', align: 'center' },
@@ -189,7 +132,7 @@ const columns: TableInstance['columns'] = [
     width: 180,
     align: 'center',
     fixed: !isMobile() ? 'right' : undefined,
-    show: has.hasPermOr(['system:dict:item:update', 'system:dict:item:delete']),
+    show: has.hasPermOr(['system:dict:item:update', 'system:dict:item:delete', 'system:dict:item:add']),
   },
 ]
 
@@ -226,7 +169,13 @@ const onClearCache = () => {
     },
   })
 }
-
+const isExpanded = ref(false)
+const tableRef = ref<InstanceType<typeof GiTable>>()
+// 展开/折叠
+const onExpanded = () => {
+  isExpanded.value = !isExpanded.value
+  tableRef.value?.tableRef?.expandAll(isExpanded.value)
+}
 // 根据选中字典查询
 const handleSelectDict = (dict: { dictId: string, dictName: string, dictCode: string }) => {
   queryForm.dictId = dict.dictId
@@ -237,7 +186,7 @@ const handleSelectDict = (dict: { dictId: string, dictName: string, dictCode: st
 
 const DictItemAddModalRef = ref<InstanceType<typeof DictItemAddModal>>()
 // 新增
-const onAdd = (record: DictItemResp | null) => {
+const onAdd = (record?: DictItemResp) => {
   const id = record ? record.id : '0'
   DictItemAddModalRef.value?.onAdd(queryForm.dictId, id)
 }
