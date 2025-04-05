@@ -68,10 +68,10 @@
 </template>
 
 <script setup lang="ts">
+import type { TableInstance } from '@arco-design/web-vue'
 import FriendLinkAddModal from './FriendLinkAddModal.vue'
 import FriendLinkDetailDrawer from './FriendLinkDetailDrawer.vue'
 import { type FriendLinkQuery, type FriendLinkResp, deleteFriendLink, exportFriendLink, listFriendLink } from '@/apis/cms/friendLink'
-import type { TableInstanceColumns } from '@/components/GiTable/type'
 import { useDownload, useTable } from '@/hooks'
 import { useDict } from '@/hooks/app'
 import { isMobile } from '@/utils'
@@ -97,7 +97,7 @@ const {
   search,
   handleDelete,
 } = useTable((page) => listFriendLink({ ...queryForm, ...page }), { immediate: true })
-const columns = ref<TableInstanceColumns[]>([
+const columns: TableInstance['columns'] = [
   { title: '友链名称', dataIndex: 'name', slotName: 'name' },
   { title: '友链地址', dataIndex: 'url', slotName: 'url' },
   { title: '创建时间', dataIndex: 'createTime', slotName: 'createTime' },
@@ -115,7 +115,7 @@ const columns = ref<TableInstanceColumns[]>([
     fixed: !isMobile() ? 'right' : undefined,
     show: has.hasPermOr(['cms:friendLink:detail', 'cms:friendLink:update', 'cms:friendLink:delete']),
   },
-])
+]
 
 // 重置
 const reset = () => {

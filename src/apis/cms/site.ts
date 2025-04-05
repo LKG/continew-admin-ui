@@ -3,6 +3,7 @@ import http from '@/utils/http'
 const BASE_URL = '/cms/site'
 
 export interface SiteResp {
+  id?: string
   name: string
   domain: string
   logo: string

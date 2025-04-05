@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { Message } from '@arco-design/web-vue'
 import { useWindowSize } from '@vueuse/core'
-import { getFriendLink, addFriendLink, updateFriendLink } from '@/apis/cms/friendLink'
+import { addFriendLink, getFriendLink, updateFriendLink } from '@/apis/cms/friendLink'
 import { type ColumnItem, GiForm } from '@/components/GiForm'
 import { useResetReactive } from '@/hooks'
 import { useDict } from '@/hooks/app'
@@ -56,7 +56,7 @@ const columns: ColumnItem[] = reactive([
   {
     label: '审核状态',
     field: 'checkStatus',
-    type: 'select', 
+    type: 'select',
     span: 24,
     required: true,
     props: {
@@ -80,7 +80,7 @@ const columns: ColumnItem[] = reactive([
     field: 'remark',
     type: 'textarea',
     props: {
-      autoSize: true
+      autoSize: true,
     },
     span: 24,
   },

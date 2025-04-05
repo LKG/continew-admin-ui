@@ -44,7 +44,6 @@
               </template>
             </a-button>
           </template>
-
           <template #label="{ record }">
             <a-tag v-if="record.color === 'primary'" color="arcoblue">{{ record.label }}</a-tag>
             <a-tag v-else-if="record.color === 'success'" color="green">{{ record.label }}</a-tag>
