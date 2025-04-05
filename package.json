@@ -78,7 +78,7 @@
     "picocolors": "^1.0.0",
     "sass": "^1.62.1",
     "sass-loader": "^13.2.2",
-    "typescript": "~5.0.4",
+    "typescript": "~5.8.2",
     "unplugin-auto-import": "^0.16.4",
     "unplugin-vue-components": "^0.25.1",
     "vite": "^5.1.5",
