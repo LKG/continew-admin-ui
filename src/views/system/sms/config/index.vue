@@ -1,5 +1,5 @@
 <template>
-  <div class="gi_table_page">
+  <GiPageLayout>
     <GiTable
       row-key="id"
       :data="dataList"
@@ -57,7 +57,7 @@
     </GiTable>
 
     <SmsConfigAddModal ref="SmsConfigAddModalRef" @save-success="search" />
-  </div>
+  </GiPageLayout>
 </template>
 
 <script setup lang="tsx">
