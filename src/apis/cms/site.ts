@@ -40,7 +40,7 @@ export interface SitePageQuery extends SiteQuery, PageQuery {}
 
 /** @desc 查询站点表列表 */
 export function listSite(query: SitePageQuery) {
-  return http.get<PageRes<SiteResp[]>>(`${BASE_URL}`, query)
+  return http.get<PageRes<SiteResp[]>>(`${BASE_URL}/tree`, query)
 }
 
 /** @desc 查询站点表详情 */

@@ -94,11 +94,6 @@
             <icon-edit />
           </template>修改
         </a-button>
-        <a-button v-if="!isUpdate" v-permission="['system:config:reset']" @click="onResetValue">
-          <template #icon>
-            <icon-undo />
-          </template>恢复默认
-        </a-button>
         <a-button v-if="isUpdate" type="primary" @click="handleSave">
           <template #icon>
             <icon-save />
@@ -213,22 +208,6 @@ const handleSave = async () => {
   Message.success('保存成功')
 }
 
-// 恢复默认
-const handleResetValue = async () => {
-  await resetOptionValue(queryForm)
-  Message.success('恢复成功')
-  await getDataList()
-  appStore.setSiteConfig(form)
-}
-const onResetValue = () => {
-  Modal.warning({
-    title: '警告',
-    content: '确认恢复基础配置为默认值吗？',
-    hideCancel: false,
-    maskClosable: false,
-    onOk: handleResetValue,
-  })
-}
 
 // 上传 favicon
 const handleUploadFavicon = (options: RequestOption) => {

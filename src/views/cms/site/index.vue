@@ -148,8 +148,8 @@ const reset = () => {
 }
 
 // 删除
-const onDelete = (record: MenuResp) => {
-  return handleDelete(() => deleteMenu(record.id), {
+const onDelete = (record: SiteResp) => {
+  return handleDelete(() => deleteSite(record.id), {
     content: `是否确定菜单「${record.title}」？`,
     showModal: true,
   })
