@@ -61,7 +61,7 @@
           v-bind="tableProps"
           :stripe="stripe"
           :size="size"
-          :bordered="{ cell: isBordered, wrapper: isBordered }"
+          :bordered="{ cell: isBordered }"
           :columns="visibleColumns"
           :scrollbar="true"
           :data="data"
@@ -268,11 +268,6 @@ defineExpose({
 
     :deep(.arco-table-body) {
       height: 100%;
-    }
-
-    // 确保垂直滚动时右侧边框显示
-    :deep(.arco-table-scroll-y) {
-      border-right: 1px solid var(--color-border-table);
     }
 
     // 控制表格最后一行的下边框显示
