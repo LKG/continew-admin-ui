@@ -3,7 +3,7 @@ import http from '@/utils/http'
 const BASE_URL = '/cms/site'
 
 export interface SiteResp {
-  id?: string
+  id: string
   name: string
   domain: string
   logo: string
@@ -14,6 +14,7 @@ export interface SiteResp {
   createUserString: string
   updateUserString: string
   disabled: boolean
+  children: Array<SiteResp>
 }
 export interface SiteDetailResp {
   id: string
@@ -29,9 +30,9 @@ export interface SiteDetailResp {
   updateUserString: string
 }
 export interface SiteQuery {
-  name: string | undefined
+  name: string 
   domain: string | undefined
-  parentId: string | undefined
+  parentId?: string | undefined
   createUser: string | undefined
   createTime: string | undefined
   sort: Array<string>
@@ -39,7 +40,7 @@ export interface SiteQuery {
 export interface SitePageQuery extends SiteQuery, PageQuery {}
 
 /** @desc 查询站点表列表 */
-export function listSite(query: SitePageQuery) {
+export function listSite(query: SiteQuery) {
   return http.get<PageRes<SiteResp[]>>(`${BASE_URL}/tree`, query)
 }
 

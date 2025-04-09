@@ -50,8 +50,6 @@
           <a-link v-permission="['cms:site:delete']" status="danger" title="删除" @click="onDelete(record)">删除</a-link>
           <a-link
             v-permission="['cms:site:create']"
-            :disabled="![1, 2].includes(record.type)"
-            :title="![1, 2].includes(record.type) ? '不可添加下级菜单' : '新增'"
             @click="onAdd(record.id)"
           >
             新增
@@ -78,8 +76,8 @@ import has from '@/utils/has'
 defineOptions({ name: 'CmsSite' })
 
 const queryForm = reactive<SiteQuery>({
-  name: undefined,
-  domain: undefined,
+  name: '',
+  domain: '',
   parentId: undefined,
   createUser: undefined,
   createTime: undefined,
@@ -94,11 +92,11 @@ const {
 } = useTable(() => listSite(queryForm), { immediate: true })
 
 // 过滤树
-const searchData = (title: string) => {
+const searchData = (name: string) => {
   const loop = (data: SiteResp[]) => {
     const result = [] as SiteResp[]
     data.forEach((item: SiteResp) => {
-      if (item.title?.toLowerCase().includes(title.toLowerCase())) {
+      if (item.name?.toLowerCase().includes(name.toLowerCase())) {
         result.push({ ...item })
       } else if (item.children) {
         const filterData = loop(item.children)
@@ -150,7 +148,7 @@ const reset = () => {
 // 删除
 const onDelete = (record: SiteResp) => {
   return handleDelete(() => deleteSite(record.id), {
-    content: `是否确定菜单「${record.title}」？`,
+    content: `是否确定站点「${record.name}」？`,
     showModal: true,
   })
 }
