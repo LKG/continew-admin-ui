@@ -33,13 +33,13 @@
     <template #toolbar-right>
       <a-button type="primary" status="danger" :disabled="!selectedKeys.length" :title="!selectedKeys.length ? '请选择' : ''" @click="onDelete">
         <template #icon><icon-delete /></template>
-        <template #default>删除</template>
+        删除
       </a-button>
       <a-button type="primary" :disabled="!selectedKeys.length" :title="!selectedKeys.length ? '请选择' : ''" @click="onRead">
-        <template #default>标记为已读</template>
+        标记为已读
       </a-button>
-      <a-button type="primary" :disabled="selectedKeys.length" :title="!selectedKeys.length ? '请选择' : ''" @click="onReadAll">
-        <template #default>全部已读</template>
+      <a-button type="primary" :disabled="selectedKeys.length > 0" :title="!selectedKeys.length ? '请选择' : ''" @click="onReadAll">
+        全部已读
       </a-button>
     </template>
     <template #title="{ record }">
@@ -82,7 +82,7 @@ const {
   handleDelete,
 } = useTable((page) => listMessage({ ...queryForm, ...page }), { immediate: true })
 
-const columns: TableInstance['collumns'] = [
+const columns: TableInstance['columns'] = [
   {
     title: '序号',
     width: 66,

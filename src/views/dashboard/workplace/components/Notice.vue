@@ -60,7 +60,7 @@ const onDetail = (id: number) => {
 
 // 打开消息中心
 const open = () => {
-  window.open('/user/message?tab=notice')
+  router.push({ path: '/user/message', query: { tab: 'notice' } })
 }
 
 onMounted(() => {
