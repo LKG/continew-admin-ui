@@ -1,19 +1,17 @@
 <template>
-  <GiPageLayout>
+  <GiPageLayout :margin="false" :body-style="{ padding: 0 }">
     <GiTable
       row-key="id"
       :data="dataList"
       :columns="columns"
       :loading="loading"
-      :scroll="{ x: '100%', y: '100%', minWidth: 1500 }"
+      :scroll="{ x: '100%', y: '100%', minWidth: 1200 }"
       :pagination="pagination"
       :disabled-tools="['size']"
       :disabled-column-keys="['clientKey']"
       @refresh="search"
     >
       <template #toolbar-left>
-        <a-input-search v-model="queryForm.clientKey" placeholder="搜索终端Key" allow-clear @search="search" />
-        <a-input-search v-model="queryForm.clientSecret" placeholder="搜索终端秘钥" allow-clear @search="search" />
         <a-select
           v-model="queryForm.clientType"
           :options="client_type"
@@ -84,10 +82,8 @@ const {
 } = useDict('client_type', 'auth_type_enum')
 
 const queryForm = reactive<ClientQuery>({
-  clientKey: '',
-  clientSecret: '',
-  authType: [] as string[],
   clientType: '',
+  authType: [] as string[],
   status: '',
   sort: ['id,desc'],
 })
@@ -124,8 +120,17 @@ const columns: TableInstance['columns'] = [
       )
     },
   },
-  { title: '终端 Key', dataIndex: 'clientKey', slotName: 'clientKey', ellipsis: true, tooltip: true, align: 'center' },
-  { title: '终端秘钥', dataIndex: 'clientSecret', slotName: 'clientSecret', ellipsis: true, tooltip: true, align: 'center' },
+  {
+    title: '终端类型',
+    dataIndex: 'clientType',
+    slotName: 'clientType',
+    ellipsis: true,
+    tooltip: true,
+    align: 'center',
+    render: ({ record }) => {
+      return <GiCellTag value={record.clientType} dict={client_type.value} />
+    },
+  },
   {
     title: '认证类型',
     dataIndex: 'authType',
@@ -137,17 +142,6 @@ const columns: TableInstance['columns'] = [
       return (
         <GiCellTags data={formatAuthType(record.authType)} />
       )
-    },
-  },
-  {
-    title: '终端类型',
-    dataIndex: 'clientType',
-    slotName: 'clientType',
-    ellipsis: true,
-    tooltip: true,
-    align: 'center',
-    render: ({ record }) => {
-      return <GiCellTag value={record.clientType} dict={client_type.value} />
     },
   },
   { title: 'Token 最低活跃频率', dataIndex: 'activeTimeout', slotName: 'activeTimeout', width: 180, align: 'center', render: ({ record }) => `${record.activeTimeout} 秒` },
@@ -178,10 +172,8 @@ const columns: TableInstance['columns'] = [
 
 // 重置
 const reset = () => {
-  queryForm.clientKey = ''
-  queryForm.clientSecret = ''
-  queryForm.authType = []
   queryForm.clientType = ''
+  queryForm.authType = []
   queryForm.status = ''
   search()
 }
