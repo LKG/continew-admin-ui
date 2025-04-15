@@ -1,6 +1,6 @@
 <template>
   <GiTable
-    v-model:selectedKeys="selectedKeys"
+    v-model:selected-keys="selectedKeys"
     row-key="id"
     :data="dataList"
     :columns="columns"
@@ -62,6 +62,7 @@ import { Message, Modal } from '@arco-design/web-vue'
 import { type MessageQuery, deleteMessage, listMessage, readAllMessage, readMessage } from '@/apis'
 import { useTable } from '@/hooks'
 import { useDict } from '@/hooks/app'
+import mittBus from '@/utils/mitt'
 
 defineOptions({ name: 'SystemMessage' })
 
@@ -70,7 +71,10 @@ const { message_type } = useDict('message_type')
 const queryForm = reactive<MessageQuery>({
   sort: ['createTime,desc'],
 })
-
+// 表格更新回调
+const onSuccess = () => {
+  mittBus.emit('count-refresh')
+}
 const {
   tableData: dataList,
   loading,
@@ -80,7 +84,7 @@ const {
   selectAll,
   search,
   handleDelete,
-} = useTable((page) => listMessage({ ...queryForm, ...page }), { immediate: true })
+} = useTable((page) => listMessage({ ...queryForm, ...page }), { immediate: true, onSuccess })
 
 const columns: TableInstance['columns'] = [
   {
