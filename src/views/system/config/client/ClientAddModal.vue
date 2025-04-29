@@ -18,7 +18,6 @@ import { Message } from '@arco-design/web-vue'
 import { useWindowSize } from '@vueuse/core'
 import { addClient, getClient, updateClient } from '@/apis/system/client'
 import { type ColumnItem, GiForm } from '@/components/GiForm'
-import { DisEnableStatusList } from '@/constant/common'
 import { useResetReactive } from '@/hooks'
 import { useDict } from '@/hooks/app'
 
@@ -31,7 +30,7 @@ const { width } = useWindowSize()
 const dataId = ref('')
 const visible = ref(false)
 const isUpdate = computed(() => !!dataId.value)
-const title = computed(() => (isUpdate.value ? '修改终端' : '新增终端'))
+const title = computed(() => (isUpdate.value ? '修改客户端' : '新增客户端'))
 const formRef = ref<InstanceType<typeof GiForm>>()
 const { client_type, auth_type_enum } = useDict('auth_type_enum', 'client_type')
 
@@ -45,7 +44,7 @@ const [form, resetForm] = useResetReactive({
 
 const columns: ColumnItem[] = reactive([
   {
-    label: '终端类型',
+    label: '客户端类型',
     field: 'clientType',
     type: 'select',
     span: 12,
@@ -108,12 +107,14 @@ const columns: ColumnItem[] = reactive([
   {
     label: '状态',
     field: 'status',
-    type: 'radio-group',
-    required: true,
+    type: 'switch',
     span: 24,
     props: {
-      type: 'button',
-      options: DisEnableStatusList,
+      type: 'round',
+      checkedValue: 1,
+      uncheckedValue: 2,
+      checkedText: '启用',
+      uncheckedText: '禁用',
     },
   },
 ])
