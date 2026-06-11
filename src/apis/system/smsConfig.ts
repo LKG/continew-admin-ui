@@ -3,7 +3,7 @@ import http from '@/utils/http'
 
 export type * from './type'
 
-const BASE_URL = '/system/smsConfig'
+const BASE_URL = '/system/sms/config'
 
 /** @desc 查询短信配置列表 */
 export function listSmsConfig(query: T.SmsConfigPageQuery) {
@@ -28,4 +28,9 @@ export function updateSmsConfig(data: any, id: string) {
 /** @desc 删除短信配置 */
 export function deleteSmsConfig(id: string) {
   return http.del(`${BASE_URL}`, { ids: [id] })
+}
+
+/** @desc 设置默认配置 */
+export function setDefaultSmsConfig(id: string) {
+  return http.put(`${BASE_URL}/${id}/default`)
 }

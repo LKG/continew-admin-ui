@@ -35,6 +35,9 @@
               <a class="item" title="使用 GitHub 账号登录" @click="onOauth('github')">
                 <GiSvgIcon name="github" :size="24" />
               </a>
+              <a class="item" title="使用微信账号登录" @click="onOauth('wechat_open')">
+                <GiSvgIcon name="wechat" :size="24" />
+              </a>
             </div>
           </div>
         </div>
@@ -84,6 +87,9 @@
         <a class="item" title="使用 GitHub 账号登录" @click="onOauth('github')">
           <GiSvgIcon name="github" :size="24" />
         </a>
+        <a class="item" title="使用微信账号登录" @click="onOauth('wechat_open')">
+          <GiSvgIcon name="wechat" :size="24" />
+        </a>
       </div>
     </div>
   </div>
@@ -97,12 +103,16 @@ import PhoneLogin from './components/phone/index.vue'
 import EmailLogin from './components/email/index.vue'
 import { socialAuth } from '@/apis/auth'
 import { useAppStore } from '@/stores'
+import { useTenantStore } from '@/stores/modules/tenant'
 import { useDevice } from '@/hooks'
+import { getTenantIdByDomain, getTenantStatus } from '@/apis'
 
 defineOptions({ name: 'Login' })
 
-const { isDesktop } = useDevice()
 const appStore = useAppStore()
+const tenantStore = useTenantStore()
+
+const { isDesktop } = useDevice()
 const title = computed(() => appStore.getTitle())
 const logo = computed(() => appStore.getLogo())
 
@@ -119,6 +129,21 @@ const onOauth = async (source: string) => {
   const { data } = await socialAuth(source)
   window.location.href = data.authorizeUrl
 }
+
+// 查询租户状态和租户编码
+const onGetTenant = async () => {
+  const { data } = await getTenantStatus()
+  tenantStore.setTenantEnable(data)
+  // 开启租户 根据地址(域名)查询租户code
+  if (data) {
+    const domain = window.location.hostname
+    const { data: tenantId } = await getTenantIdByDomain(domain)
+    tenantStore.setTenantId(tenantId)
+  }
+}
+onMounted(() => {
+  onGetTenant()
+})
 </script>
 
 <style scoped lang="scss">
@@ -283,7 +308,12 @@ const onOauth = async (source: string) => {
     position: fixed;
     top: 20px;
     right: 30px;
-    z-index: 9999;
+    z-index: 999;
+  }
+
+  // 新增弹窗层级设置
+  .arco-modal-wrapper {
+    z-index: 1000;
   }
 
   .footer {
@@ -347,7 +377,6 @@ const onOauth = async (source: string) => {
     &-box {
       width: 86%;
       max-width: 850px;
-      height: 490px;
       display: flex;
       z-index: 999;
       box-shadow: 0 2px 4px 2px rgba(0, 0, 0, 0.08);
@@ -489,7 +518,12 @@ const onOauth = async (source: string) => {
     position: fixed;
     top: 20px;
     right: 30px;
-    z-index: 9999;
+    z-index: 999;
+  }
+
+  // 新增弹窗层级设置
+  .arco-modal-wrapper {
+    z-index: 1000;
   }
 
   .footer {

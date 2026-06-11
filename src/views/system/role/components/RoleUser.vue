@@ -1,5 +1,6 @@
 <template>
   <GiTable
+    v-model:selected-keys="selectedKeys"
     row-key="id"
     :data="dataList"
     :columns="columns"
@@ -9,7 +10,6 @@
     :disabled-tools="['size', 'setting', 'fullscreen']"
     :disabled-column-keys="['nickname']"
     :row-selection="{ type: 'checkbox', showCheckedAll: true }"
-    :selected-keys="selectedKeys"
     @select="select"
     @select-all="selectAll"
     @refresh="reset"
@@ -57,13 +57,13 @@
     </template>
   </GiTable>
 
-  <RoleAssignModal ref="RoleAssignModalRef" @save-success="search" />
+  <AssignModal ref="AssignModalRef" @save-success="search" />
 </template>
 
 <script lang='tsx' setup>
 import type { TableInstance } from '@arco-design/web-vue'
 import { Message, Modal } from '@arco-design/web-vue'
-import RoleAssignModal from '../RoleAssignModal.vue'
+import AssignModal from '../AssignModal.vue'
 import { useResetReactive, useTable } from '@/hooks'
 import { type RoleUserQuery, type RoleUserResp, listRoleUser, unassignFromUsers } from '@/apis/system/role'
 import { isMobile } from '@/utils'
@@ -158,10 +158,10 @@ const onDelete = (record: RoleUserResp) => {
   })
 }
 
-const RoleAssignModalRef = ref<InstanceType<typeof RoleAssignModal>>()
+const AssignModalRef = ref<InstanceType<typeof AssignModal>>()
 // 分配
 const onAssign = () => {
-  RoleAssignModalRef.value?.onOpen(props.roleId)
+  AssignModalRef.value?.onOpen(props.roleId)
 }
 
 // 监听 roleId 的变化

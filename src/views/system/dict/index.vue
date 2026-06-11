@@ -24,11 +24,11 @@
             </a-button>
           </template>
           <template #toolbar-right>
-            <a-button v-permission="['system:dict:item:create']" type="primary" @click="onAdd">
+            <a-button v-permission="['system:dictItem:create']" type="primary" @click="onAdd">
               <template #icon><icon-plus /></template>
               <template #default>新增</template>
             </a-button>
-            <a-button v-permission="['system:dict:item:clearCache']" type="outline" status="warning" @click="onClearCache">
+            <a-button v-permission="['system:dictItem:clearCache']" type="outline" status="warning" @click="onClearCache">
               <template #icon><icon-delete /></template>
               <template #default>清除缓存</template>
             </a-button>
@@ -39,15 +39,16 @@
             <a-tag v-else-if="record.color === 'warning'" color="orangered">{{ record.label }}</a-tag>
             <a-tag v-else-if="record.color === 'error'" color="red">{{ record.label }}</a-tag>
             <a-tag v-else-if="record.color === 'default'" color="gray">{{ record.label }}</a-tag>
+            <span v-else>{{ record.label }}</span>
           </template>
           <template #status="{ record }">
             <GiCellStatus :status="record.status" />
           </template>
           <template #action="{ record }">
             <a-space>
-              <a-link v-permission="['system:dict:item:update']" title="修改" @click="onUpdate(record)">修改</a-link>
+              <a-link v-permission="['system:dictItem:update']" title="修改" @click="onUpdate(record)">修改</a-link>
               <a-link
-                v-permission="['system:dict:item:delete']"
+                v-permission="['system:dictItem:delete']"
                 status="danger"
                 title="删除"
                 @click="onDelete(record)"
@@ -118,7 +119,7 @@ const columns: TableInstance['columns'] = [
     width: 130,
     align: 'center',
     fixed: !isMobile() ? 'right' : undefined,
-    show: has.hasPermOr(['system:dict:item:update', 'system:dict:item:delete']),
+    show: has.hasPermOr(['system:dictItem:update', 'system:dictItem:delete']),
   },
 ]
 

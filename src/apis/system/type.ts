@@ -63,6 +63,15 @@ export type RoleDetailResp = RoleResp & {
   menuCheckStrictly: boolean
   deptCheckStrictly: boolean
 }
+export interface RolePermissionResp {
+  id: string
+  title: string
+  parentId: string
+  permission?: string
+  children?: RolePermissionResp[]
+  permissions?: RolePermissionResp[]
+  isChecked?: boolean
+}
 export interface RoleUserResp {
   id: string
   username: string
@@ -178,17 +187,22 @@ export interface DictItemPageQuery extends DictItemQuery, PageQuery {
 export interface NoticeResp {
   id?: string
   title?: string
-  content: string
+  type: string
+  noticeScope: number
+  noticeMethods?: Array<number>
+  isTiming: boolean
+  publishTime?: string
+  isTop: boolean
   status?: number
-  type?: string
-  effectiveTime?: string
-  terminateTime?: string
-  noticeScope?: number
-  noticeUsers?: Array<string>
-  createUserString?: string
-  createTime?: string
-  updateUserString?: string
-  updateTime?: string
+}
+export type NoticeDetailResp = NoticeResp & {
+  createUserString: string
+  createTime: string
+  updateUserString: string
+  updateTime: string
+}
+export type NoticePreviewResp = NoticeDetailResp & {
+  content: string
 }
 export interface NoticeQuery {
   title?: string
@@ -202,24 +216,26 @@ export interface NoticePageQuery extends NoticeQuery, PageQuery {
 export interface FileItem {
   id: string
   name: string
+  originalName: string
   size: number
   url: string
   parentPath: string
-  absPath: string
-  metadata: string
+  path: string
   sha256: string
   contentType: string
+  metadata: string
   thumbnailSize: number
-  thumbnailUrl: string
+  thumbnailName: string
   thumbnailMetadata: string
+  thumbnailUrl: string
   extension: string
   type: number
   storageId: string
   storageName: string
   createUserString: string
   createTime: string
-  updateUserString: string
-  updateTime: string
+  updateUserString?: string
+  updateTime?: string
 }
 /** 文件资源统计信息 */
 export interface FileStatisticsResp {
@@ -229,10 +245,14 @@ export interface FileStatisticsResp {
   unit: string
   data: Array<FileStatisticsResp>
 }
+/** 文件夹计算大小信息 */
+export interface FileDirCalcSizeResp {
+  size: number
+}
 export interface FileQuery {
-  name?: string
+  originalName?: string
   type?: string
-  absPath?: string
+  parentPath?: string
   sort: Array<string>
 }
 export interface FilePageQuery extends FileQuery, PageQuery {
@@ -249,6 +269,8 @@ export interface StorageResp {
   endpoint: string
   bucketName: string
   domain: string
+  recycleBinEnabled: boolean
+  recycleBinPath: string
   description: string
   isDefault: boolean
   sort: number
@@ -273,12 +295,17 @@ export interface ClientResp {
   activeTimeout: string
   timeout: string
   status: string
+  isConcurrent: boolean
+  replacedRange: string
+  maxLoginCount: number
+  overflowLogoutMode: string
   createUser: string
   createTime: string
   updateUser: string
   updateTime: string
   createUserString: string
   updateUserString: string
+  disabled: boolean
 }
 export interface ClientDetailResp {
   id: string
@@ -287,7 +314,11 @@ export interface ClientDetailResp {
   authType: string
   activeTimeout: string
   timeout: string
-  status: string
+  status: number
+  isConcurrent: boolean
+  maxLoginCount: number
+  replacedRange: string
+  overflowLogoutMode: string
   createUser: string
   createTime: string
   updateUser: string
@@ -379,6 +410,7 @@ export interface SmsConfigResp {
   maximum: string
   supplierConfig: string
   status: number
+  isDefault: boolean
   createUser: string
   createTime: string
   updateUser: string
@@ -430,6 +462,7 @@ export interface MessageResp {
   title: string
   content: string
   type: number
+  path: string
   isRead: boolean
   readTime?: string
   createUserString?: string
@@ -444,4 +477,57 @@ export interface MessageQuery {
 }
 
 export interface MessagePageQuery extends MessageQuery, PageQuery {
+}
+
+/** 分片上传 - 初始化参数 */
+export interface MultiPartUploadInitReq {
+  fileName: string
+  fileSize: number
+  fileMd5: string
+  parentPath: string
+  metaData: Record<string, string>
+}
+
+/** 分片上传 - 初始化响应 */
+export interface MultiPartUploadInitResp {
+  uploadId: string
+  partSize: number
+  path: string
+  uploadedPartNumbers: number[]
+}
+
+/** 分片上传 - 上传分片参数 */
+export interface UploadPartReq {
+  uploadId: string
+  partNumber: number
+  file: Blob
+  path: string
+}
+
+/** 分片上传 - 上传分片响应 */
+export interface UploadPartResp {
+  /** 分片编号 */
+  partNumber: number
+  /** 分片ETag */
+  partETag: string
+  /** 分片大小 */
+  partSize: number
+  /** 是否成功 */
+  success: boolean
+  /** 错误信息 */
+  errorMessage?: string
+}
+
+/** 分片上传 - 完成上传参数 */
+export interface CompleteMultipartUploadReq {
+  uploadId: string
+  partETags: Array<{
+    partNumber: number
+    eTag: string
+  }>
+}
+
+/** 分片上传 - 取消上传参数 */
+export interface CancelUploadParams {
+  uploadId: string
 }

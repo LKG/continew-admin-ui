@@ -5,6 +5,7 @@ import { useRouteStore, useUserStore } from '@/stores'
 import { getToken } from '@/utils/auth'
 import { isHttp } from '@/utils/validate'
 import 'nprogress/nprogress.css'
+import { setRouteEmitter } from '@/hooks'
 
 NProgress.configure({
   easing: 'ease', // 动画方式
@@ -110,7 +111,7 @@ export const setupRouterGuard = (router: Router) => {
           } catch (error: any) {
             // 过程中发生任何错误，都直接重置 Token，并重定向到登录页面
             await userStore.logoutCallBack()
-            next(`/login?redirect=${to.path}`)
+            next(`/login?redirect=${encodeURIComponent(to.fullPath)}`)
           }
         } else {
           next()
@@ -123,7 +124,7 @@ export const setupRouterGuard = (router: Router) => {
         next()
       } else {
         // 其他没有访问权限的页面将被重定向到登录页面
-        next('/login')
+        next(`/login?redirect=${encodeURIComponent(to.fullPath)}`)
       }
     }
 
@@ -140,5 +141,16 @@ export const setupRouterGuard = (router: Router) => {
 
   router.afterEach(() => {
     NProgress.done()
+  })
+}
+/**
+ * 设置页面路由守卫
+ * @description 处理路由变化时的页面级操作，如路由变化事件通知
+ * @param router - Vue Router 实例
+ */
+export const setupPageGuard = (router: Router) => {
+  router.beforeEach((to, from) => {
+    // 触发路由变化事件，通知所有监听器
+    setRouteEmitter(to, from)
   })
 }
